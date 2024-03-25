@@ -1,4 +1,5 @@
 flask
-sqlalchemy
+Flask-SQLAlchemy
 jinja2
 psycopg
+flask-login

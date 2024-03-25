@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from models import db, User
 
-app = Flask(__name__, static_folder="../Frontend/static", template_folder='../../Frontend/templates')
+app = Flask(__name__, static_folder="../../Frontend/static", template_folder='../../Frontend/templates')
 
 # Database Connection (sqlite for dev)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../todo_board.db"
@@ -37,8 +37,6 @@ def create_user():
     if not all(key in data for key in ["username", "email", "password"]):
         return jsonify({"error": "Missing required fields"}), 400
 
-    # Validate data types if needed
-
     existing_user = User.query.filter_by(email=data["email"]).first()
     if existing_user:
         return jsonify({"error": "Email already exists"}), 400
@@ -61,5 +59,5 @@ def teardown_request(exception=None):
 
 
 if __name__ == "__main__":
-    initialize_database()  # Call the function to initialize database tables
+    initialize_database()  # initialize database tables
     app.run(debug=True)

@@ -1,19 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}To-Do Board{% endblock %}</title>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
     <main>
-        <!-- Content block that child templates will override -->
-        {% block content %}
-        {% endblock %}
+      <!-- Content block that child templates will override -->
+      {% block content %} {% endblock %}
     </main>
 
     <footer>
-        <!-- Footer content goes here -->
+      <!-- Footer content goes here -->
     </footer>
-</body>
+  </body>
 </html>

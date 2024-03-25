@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "Frontend for To-Do Board website.",
   "scripts": {
+    "dev": "npm-run-all --parallel watch start-backend",
     "build": "npm run css",
+    "start-backend": "cd ../Backend && python src/main.py",
     "css-compile": "sass --style compressed --source-map --embed-sources --no-error-css --load-path=node_modules static/scss/:static/css/",
     "css-lint": "stylelint static/scss/",
     "css-prefix": "postcss --replace static/css/styles.css --use autoprefixer --map",
     "css": "npm-run-all css-compile css-prefix",
     "watch": "nodemon -e html,scss -x \"npm run css\"",
     "test": "npm-run-all css-lint css",
-    "format": "prettier --write"
+    "format": "prettier --write 'templates/**/*.html'"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",

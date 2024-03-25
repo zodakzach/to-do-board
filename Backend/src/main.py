@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from models import db, User
 
-app = Flask(__name__, static_folder="../Frontend/static")
+app = Flask(__name__, static_folder="../Frontend/static", template_folder='../../Frontend/templates')
 
 # Database Connection (sqlite for dev)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../todo_board.db"
@@ -27,7 +27,8 @@ def initialize_database():
 
 @app.route("/")
 def index():
-    return "Hello, world!"
+    # Render the index.html template
+    return render_template("index.html")
 
 
 @app.route("/create_users", methods=["POST"])

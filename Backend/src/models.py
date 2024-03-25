@@ -1,11 +1,12 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+# Define db instance without binding it to the Flask app
+db = SQLAlchemy()
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)

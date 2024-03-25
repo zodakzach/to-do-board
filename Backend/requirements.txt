@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 jinja2
 psycopg
 flask-login
+python-dotenv

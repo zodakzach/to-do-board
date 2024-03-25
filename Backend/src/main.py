@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import IntegrityError
+from models import db, User
 
 app = Flask(__name__, static_folder="../Frontend/static")
 
@@ -12,14 +11,16 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../todo_board.db"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
-# Importing User model from models.py
-from models import User
 
-# Create all tables within the application context
-with app.app_context():
-    db.create_all()
+def initialize_database():
+    """
+    Initialize database tables.
+    """
+    with app.app_context():
+        db.create_all()
+
 
 # Routes
 
@@ -32,6 +33,11 @@ def index():
 @app.route("/create_users", methods=["POST"])
 def create_user():
     data = request.json
+    if not all(key in data for key in ["username", "email", "password"]):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # Validate data types if needed
+
     existing_user = User.query.filter_by(email=data["email"]).first()
     if existing_user:
         return jsonify({"error": "Email already exists"}), 400
@@ -43,10 +49,16 @@ def create_user():
     try:
         db.session.commit()
         return jsonify({"message": "User created successfully!"}), 201
-    except IntegrityError:
+    except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Failed to create user"}), 500
+        return jsonify({"error": "Failed to create user", "details": str(e)}), 500
+
+
+@app.teardown_request
+def teardown_request(exception=None):
+    db.session.close()
 
 
 if __name__ == "__main__":
+    initialize_database()  # Call the function to initialize database tables
     app.run(debug=True)

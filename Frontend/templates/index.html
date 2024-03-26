@@ -1,4 +1,50 @@
 {% extends "base.html" %} {% block content %}
-<h2>Welcome to the Index Page</h2>
-<p>This is the index page content.</p>
+<div class="container mt-5 text-center">
+  <h1 class="gradient-text display-3 mt-4 fw-bold">To-Do Board</h1>
+</div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 mt-3">
+      <div class="centered-box">
+        <!-- Content inside the centered box -->
+        <h1 class="text-center fw-bold mt-3">LOGIN</h1>
+        <p class="text-center fw-lighter">
+          Please enter your email and password
+        </p>
+        <div class="mb-5 mt-5 px-4">
+          <label for="exampleFormControlInput1" class="form-label"
+            >Email address</label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="name@example.com"
+          />
+          <label for="inputPassword5" class="form-label mt-3">Password</label>
+          <input
+            type="password"
+            id="inputPassword5"
+            class="form-control"
+            aria-describedby="passwordHelpBlock"
+            placeholder="Password"
+          />
+        </div>
+        <div class="text-center">
+          <!-- Center the button -->
+          <button
+            type="button"
+            class="btn btn-lg btn-outline-light mt-5 mb-5 fw-semibold px-5"
+          >
+            LOGIN
+          </button>
+        </div>
+        <div class="text-center mt-5">
+          <span>Don't have an account?</span>
+          <a href="{{ url_for('register') }}" class="fw-lighter">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

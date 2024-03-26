@@ -1,57 +1,62 @@
-{% extends "base.html" %} {% block content %} 
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-7 mt-3">
-        <div class="centered-box">
-          <!-- Content inside the centered box -->
-          <h1 class="text-center fw-bold mt-3">REGISTER</h1>
-          <p class="text-center fw-lighter">
-            Please enter acccount information
-          </p>
-          <div class="mb-5 mt-5 px-4">
-            <label for="usernameInput" class="form-label">Username</label>
-            <input class="form-control" type="text" placeholder="Username" id="usernameInput">
-            <label for="formControlInput1" class="form-label mt-3"
-              >Email address</label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="formControlInput1"
-              placeholder="name@example.com"
-            />
-            <label for="inputPassword" class="form-label mt-3">Password</label>
-            <input
-              type="password"
-              id="inputPassword"
-              class="form-control"
-              aria-describedby="passwordHelpBlock"
-              placeholder="Password"
-            />
-            <label for="inputReEnterPassword" class="form-label mt-3">Re-enter Password</label>
-            <input
-              type="password"
-              id="inputReEnterPassword"
-              class="form-control"
-              aria-describedby="passwordHelpBlock"
-              placeholder="Password"
-            />
-          </div>
-          <div class="text-center">
-            <!-- Center the button -->
-            <button
-              type="button"
-              class="btn btn-lg btn-outline-light mt-3 mb-5 fw-semibold px-5"
-            >
-              SIGNUP
-            </button>
-          </div>
-          <div class="text-center mt-5">
-            <span>Already have an account?</span>
-            <a href="{{ url_for('index') }}" class="fw-lighter">Login</a>
-          </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-7 mt-3">
+      <div class="centered-box">
+        <!-- Content inside the centered box -->
+        <h1 class="text-center fw-bold mt-3">REGISTER</h1>
+        <p class="text-center fw-lighter">Please enter acccount information</p>
+        <div class="mb-5 mt-5 px-4">
+          <label for="usernameInput" class="form-label">Username</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Username"
+            id="usernameInput"
+          />
+          <label for="formControlInput1" class="form-label mt-3"
+            >Email address</label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="formControlInput1"
+            placeholder="name@example.com"
+          />
+          <label for="inputPassword" class="form-label mt-3">Password</label>
+          <input
+            type="password"
+            id="inputPassword"
+            class="form-control"
+            aria-describedby="passwordHelpBlock"
+            placeholder="Password"
+          />
+          <label for="inputReEnterPassword" class="form-label mt-3"
+            >Re-enter Password</label
+          >
+          <input
+            type="password"
+            id="inputReEnterPassword"
+            class="form-control"
+            aria-describedby="passwordHelpBlock"
+            placeholder="Password"
+          />
+        </div>
+        <div class="text-center">
+          <!-- Center the button -->
+          <button
+            type="button"
+            class="btn btn-lg btn-outline-light mt-3 mb-5 fw-semibold px-5"
+          >
+            SIGNUP
+          </button>
+        </div>
+        <div class="text-center mt-5">
+          <span>Already have an account?</span>
+          <a href="{{ url_for('index') }}" class="fw-lighter">Login</a>
         </div>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}

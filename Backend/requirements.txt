@@ -4,3 +4,4 @@ jinja2
 psycopg
 flask-login
 python-dotenv
+flask-bcrypt

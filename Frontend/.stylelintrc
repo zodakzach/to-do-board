@@ -1,4 +1,18 @@
 {
-    "extends": "stylelint-config-twbs-bootstrap"
-}
+    "extends": "stylelint-config-twbs-bootstrap",
+    "rules": {
+      "color-hex-length": "short",
+      "property-no-vendor-prefix": null,
+      "order/properties-order": [
+        "content",
+        "position",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "z-index",
+        "display"
+      ]
+    }
+  }
   

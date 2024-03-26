@@ -54,12 +54,12 @@ $enable-shadows: true;
 // Custum Styles
 
 .gradient-text {
-    background: linear-gradient(45deg, #ffffff 30%, #3e1ef8 50%);
+    background: linear-gradient(45deg, #fff 30%, #3e1ef8 50%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text; // Standard property
     text-shadow: 
-    0 0 40px #efefef; /* Bloom effect */
+        0 0 40px #efefef; /* Bloom effect */
 }
   
 .centered-box {

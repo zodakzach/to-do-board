@@ -6,46 +6,49 @@
         <!-- Content inside the centered box -->
         <h1 class="text-center fw-bold mt-3">REGISTER</h1>
         <p class="text-center fw-lighter">Please enter acccount information</p>
-        <div class="mb-5 mt-5 px-4">
-          <label for="usernameInput" class="form-label">Username</label>
+        <div class="mb-5 mt-5 px-4 overflow-hidden">
+          <label for="username" class="form-label">Username</label>
           <input
             class="form-control"
             type="text"
             placeholder="Username"
-            id="usernameInput"
+            id="username"
           />
-          <label for="formControlInput1" class="form-label mt-3"
-            >Email address</label
-          >
+          <p class="text-danger d-none mb-0" id="username-error"></p>
+          <label for="email" class="form-label mt-3">Email address</label>
           <input
             type="email"
             class="form-control"
-            id="formControlInput1"
+            id="email"
             placeholder="name@example.com"
           />
-          <label for="inputPassword" class="form-label mt-3">Password</label>
+          <p class="text-danger d-none mb-0" id="email-error"></p>
+          <label for="password" class="form-label mt-3">Password</label>
           <input
             type="password"
-            id="inputPassword"
+            id="password"
             class="form-control"
             aria-describedby="passwordHelpBlock"
             placeholder="Password"
           />
-          <label for="inputReEnterPassword" class="form-label mt-3"
+          <p class="text-danger d-none mb-0" id="password-error"></p>
+          <label for="repassword" class="form-label mt-3"
             >Re-enter Password</label
           >
           <input
             type="password"
-            id="inputReEnterPassword"
+            id="repassword"
             class="form-control"
             aria-describedby="passwordHelpBlock"
             placeholder="Password"
           />
+          <p class="text-danger d-none mb-0" id="repassword-error"></p>
         </div>
         <div class="text-center">
           <!-- Center the button -->
           <button
             type="button"
+            id="register-btn"
             class="btn btn-lg btn-outline-light mt-3 mb-5 fw-semibold px-5"
           >
             SIGNUP

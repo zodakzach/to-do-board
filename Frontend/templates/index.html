@@ -12,29 +12,30 @@
           Please enter your email and password
         </p>
         <div class="mb-5 mt-5 px-4">
-          <label for="exampleFormControlInput1" class="form-label"
-            >Email address</label
-          >
+          <label for="email" class="form-label">Email address</label>
           <input
             type="email"
             class="form-control"
-            id="exampleFormControlInput1"
+            id="email"
             placeholder="name@example.com"
           />
-          <label for="inputPassword5" class="form-label mt-3">Password</label>
+          <p class="text-danger d-none mb-0" id="email-error"></p>
+          <label for="password" class="form-label mt-3">Password</label>
           <input
             type="password"
-            id="inputPassword5"
+            id="password"
             class="form-control"
             aria-describedby="passwordHelpBlock"
             placeholder="Password"
           />
+          <p class="text-danger d-none mb-0" id="password-error"></p>
         </div>
         <div class="text-center">
           <!-- Center the button -->
           <button
             type="button"
             class="btn btn-lg btn-outline-light mt-5 mb-5 fw-semibold px-5"
+            id="login-btn"
           >
             LOGIN
           </button>

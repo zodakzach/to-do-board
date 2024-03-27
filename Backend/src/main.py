@@ -2,6 +2,13 @@ import os
 from flask import Flask, jsonify, request, render_template
 from models import db, bcrypt, User
 from dotenv import load_dotenv
+from flask_login import (
+    login_user,
+    login_required,
+    LoginManager,
+    logout_user,
+    current_user,
+)
 
 app = Flask(
     __name__,
@@ -10,7 +17,7 @@ app = Flask(
 )
 
 # Load environment variables from .env file
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
@@ -27,6 +34,14 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 db.init_app(app)
 bcrypt.init_app(app)
+
+login_manager = LoginManager(app)
+login_manager.login_view = "/"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 def initialize_database():
@@ -46,37 +61,61 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/register")
-def register():
-    # Render the register.html template
-    return render_template("register.html")
+@app.route("/todo-list")
+@login_required
+def todo_list():
+    return render_template("todo-list.html")
 
 
-@app.route("/create_user", methods=["POST"])
-def create_user():
+@app.route("/login", methods=["POST"])
+def login():
     data = request.json
-    if not all(key in data for key in ["username", "email", "password"]):
+    if not all(key in data for key in ["email", "password"]):
         return jsonify({"error": "Missing required fields"}), 400
-    
-    existing_username_user = User.query.filter_by(username=data["username"]).first()
-    if existing_username_user:
-        return jsonify({"error": "Username already exists"}), 400
 
-    existing_email_user = User.query.filter_by(email=data["email"]).first()
-    if existing_email_user:
-        return jsonify({"error": "Email already exists"}), 400
+    user = User.query.filter_by(email=data["email"]).first()
+    if not user:
+        return jsonify({"error": "Invalid email", "field": "email"}), 401
 
-    new_user = User(
-        username=data["username"], email=data["email"]
-    )
-    new_user.set_password(data["password"])  # Set the password using the set_password method to hash it before storing
-    db.session.add(new_user)
-    try:
-        db.session.commit()
-        return jsonify({"message": "User created successfully!"}), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": "Failed to create user", "details": str(e)}), 500
+    if not user.check_password(data["password"]):
+        return jsonify({"error": "Invalid password", "field": "password"}), 401
+
+    login_user(user)
+    return jsonify({"message": "Login successful!"}), 200
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message": "Logout successful!"}), 200
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        # Render the register.html template
+        return render_template("register.html")
+    elif request.method == "POST":
+        data = request.json
+        if not all(key in data for key in ["username", "email", "password"]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        existing_email_user = User.query.filter_by(email=data["email"]).first()
+        if existing_email_user:
+            return jsonify({"error": "Email already exists", "field": "email"}), 400
+
+        new_user = User(username=data["username"], email=data["email"])
+        new_user.set_password(
+            data["password"]
+        )  # Set the password using the set_password method to hash it before storing
+        db.session.add(new_user)
+        try:
+            db.session.commit()
+            return jsonify({"message": "User created successfully!"}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": "Failed to create user", "details": str(e)}), 500
 
 
 @app.teardown_request

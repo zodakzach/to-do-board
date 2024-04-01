@@ -1,1 +1,33 @@
-{% extends "base.html" %} {% block content %} {% endblock %}
+{% extends "base.html" %} {% block content %}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand small-gradient-text fw-bold" href="#">To-Do Board</a>
+    <button
+      class="nav-link"
+      type="button"
+      role="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Notifications</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<span>{{ current_user.username }}</span>
+
+{% endblock %}

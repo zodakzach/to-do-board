@@ -10710,39 +10710,50 @@ $(document).on("click", "#register-btn", function() {
     // Validation
     if (!username) {
         $('#username-error').text('This field is required.').removeClass('d-none');
+        $('#username').addClass('border-danger');
         missingValues = true;
     } else if (username.length > 50) {
         $('#username-error').text('Username must be maximum 50 characters.').removeClass('d-none');
+        $('#username').addClass('border-danger');
         missingValues = true;
     } else {
         $('#username-error').addClass('d-none');
+        $('#username').removeClass('border-danger');
     }
 
     if (!email) {
         $('#email-error').text('This field is required.').removeClass('d-none');
+        $('#email').addClass('border-danger');
         missingValues = true;
     } else if (email.length > 100) {
         $('#email-error').text('Email must be maximum 100 characters.').removeClass('d-none');
+        $('#email').addClass('border-danger');
         missingValues = true;
     } else {
         $('#email-error').addClass('d-none');
+        $('#email').removeClass('border-danger');
     }
 
     if (!password) {
         $('#password-error').text('This field is required.').removeClass('d-none');
+        $('#password').addClass('border-danger');
         missingValues = true;
     } else if (password.length > 20) {
         $('#password-error').text('Password must be maximum 20 characters.').removeClass('d-none');
+        $('#password').addClass('border-danger');
         missingValues = true;
     } else {
         $('#password-error').addClass('d-none');
+        $('#password').removeClass('border-danger');
     }
 
     if (!repassword) {
         $('#repassword-error').text('This field is required.').removeClass('d-none');
+        $('#repassword').addClass('border-danger');
         missingValues = true;
     } else {
         $('#repassword-error').addClass('d-none');
+        $('#repassword').removeClass('border-danger');
     }
 
     // If there are missing values, stop processing
@@ -10753,6 +10764,7 @@ $(document).on("click", "#register-btn", function() {
     // Check if password matches re-entered password
     if (password !== repassword) {
         $('#repassword-error').text('Passwords do not match. Please re-enter passwords.').removeClass('d-none');
+        $('#repassword').addClass('border-danger');
         return;
     }
 
@@ -10778,6 +10790,7 @@ $(document).on("click", "#register-btn", function() {
                 if (response.hasOwnProperty('field')) {
                     var field = response.field;
                     $('#' + field + '-error').text(response.error).removeClass('d-none');
+                    $('#' + field).addClass('border-danger');
                 }
             }        }
     });
@@ -10792,16 +10805,20 @@ $(document).on("click", "#login-btn", function() {
     // Validation
     if (!email) {
         $('#email-error').text('This field is required.').removeClass('d-none');
+        $('#email').addClass('border-danger');
         missingValues = true;
     } else {
         $('#email-error').addClass('d-none');
+        $('#email').removeClass('border-danger');
     }
 
     if (!password) {
         $('#password-error').text('This field is required.').removeClass('d-none');
+        $('#password').addClass('border-danger');
         missingValues = true;
     } else {
         $('#password-error').addClass('d-none');
+        $('#password').removeClass('border-danger');
     }
 
     // If there are missing values, stop processing
@@ -10831,6 +10848,7 @@ $(document).on("click", "#login-btn", function() {
             if (response.hasOwnProperty('field')) {
                 var field = response.field;
                 $('#' + field + '-error').text(response.error).removeClass('d-none');
+                $('#' + field).addClass('border-danger');
             }
         }        
     }

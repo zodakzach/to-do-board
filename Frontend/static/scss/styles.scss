@@ -61,9 +61,28 @@ $enable-shadows: true;
     text-shadow: 
         0 0 40px #efefef; /* Bloom effect */
 }
+
+.small-gradient-text {
+    background: linear-gradient(45deg, #fff 30%, #745df9 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; // Standard property
+    text-shadow: 
+        0 0 40px #efefef; /* Bloom effect */
+}
   
 .centered-box {
-    background-color: rgba(255, 255, 255, 0.1); /* Slightly lighter background */
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter background */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); // Soft white shadow
     padding: 20px; /* Adjust padding as needed */
     border-radius: 10px; /* Rounded corners */
+      // Additional styles for a glassy effect
+    border: 1px solid rgba(255, 255, 255, 0.2); // Add a subtle border
+    transition: all 0.3s ease; // Add transition for smooth hover effect
+
+    // Hover effect for a more interactive feel
+    &:hover {
+        transform: scale(1.05); // Scale up slightly on hover
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); // Increase shadow intensity on hover
+    }
 }

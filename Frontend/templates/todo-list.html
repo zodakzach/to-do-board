@@ -27,7 +27,65 @@
     </div>
   </div>
 </nav>
-
-<span>{{ current_user.username }}</span>
-
+<h1 class="mt-5 fw-bold text-center">
+  {{ current_user.username | title }}'s To-Do Board
+</h1>
+<div class="container mt-5 mb-4 me-auto">
+  <div class="row d-flex align-items-end me-5 ms-5">
+    <div class="col-md-4">
+      <div class="input-group search-box">
+        <input
+          type="text"
+          class="form-control"
+          aria-label="Search"
+          placeholder="Search..."
+        />
+        <button class="btn btn-outline-secondary align-top" type="button">
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary fw-semibold">
+        Add Tasks
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <table class="table table-striped table-hover">
+    <thead class="text-center">
+      <tr>
+        <th>Task</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+        <th>Completed</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      <tr>
+        <td>Complete project proposal</td>
+        <td>High</td>
+        <td>2024-04-10</td>
+        <td>Yes</td>
+        <td>Edit | Delete</td>
+      </tr>
+      <tr>
+        <td>Prepare presentation slides</td>
+        <td>Medium</td>
+        <td>2024-04-15</td>
+        <td>No</td>
+        <td>Edit | Delete</td>
+      </tr>
+      <tr>
+        <td>Send progress report</td>
+        <td>Low</td>
+        <td>2024-04-20</td>
+        <td>No</td>
+        <td>Edit | Delete</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 {% endblock %}

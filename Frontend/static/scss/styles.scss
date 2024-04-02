@@ -86,3 +86,23 @@ $enable-shadows: true;
         box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); // Increase shadow intensity on hover
     }
 }
+
+.table tbody tr td {
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.search-box {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter background */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); // Soft white shadow
+    padding: 5px; /* Adjust padding as needed */
+    border-radius: 15px; /* Rounded corners */
+      // Additional styles for a glassy effect
+    border: 1px solid rgba(255, 255, 255, 0.2); // Add a subtle border
+    transition: all 0.3s ease; // Add transition for smooth hover effect
+
+    // Hover effect for a more interactive feel
+    &:hover {
+        transform: scale(1.05); // Scale up slightly on hover
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); // Increase shadow intensity on hover
+    }
+}

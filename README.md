@@ -123,16 +123,16 @@ To utilize these scripts, follow these steps:
 
 Here's a breakdown of the available scripts
 
-- dev: Runs development environment tasks concurrently. It watches for changes in files and starts the backend server.
-- build: Builds the project by compiling JavaScript using Rollup and compiling SCSS to CSS.
-- start-backend: Starts the backend server by navigating to the backend directory and executing the Python script.
-- css-compile: Compiles SCSS files into compressed CSS with source maps and embeds sources.
-- css-lint: Lints SCSS files using Stylelint to ensure code quality and consistency.
-- css-prefix: Adds vendor prefixes to the CSS file using Autoprefixer.
-- css: Runs both css-compile and css-prefix scripts sequentially to compile SCSS files and add prefixes to CSS.
-- watch: Monitors changes in HTML and SCSS files, triggering the build script accordingly.
-- test: Runs linting and CSS compilation tasks to ensure code quality and style consistency.
-- format: Formats HTML files using Prettier to maintain consistent code style.
+- **dev**: Runs development environment tasks concurrently. It watches for changes in files and starts the backend server.
+- **build**: Builds the project by compiling JavaScript using Rollup and compiling SCSS to CSS.
+- **start-backend**: Starts the backend server by navigating to the backend directory and executing the Python script.
+- **css-compile**: Compiles SCSS files into compressed CSS with source maps and embeds sources.
+- **css-lint**: Lints SCSS files using Stylelint to ensure code quality and consistency.
+- **css-prefix**: Adds vendor prefixes to the CSS file using Autoprefixer.
+- **css**: Runs both css-compile and css-prefix scripts sequentially to compile SCSS files and add prefixes to CSS.
+- **watch**: Monitors changes in HTML and SCSS files, triggering the build script accordingly.
+- **test**: Runs linting and CSS compilation tasks to ensure code quality and style consistency.
+- **format**: Formats HTML files using Prettier to maintain consistent code style.
 
 These scripts streamline various development tasks such as compiling code, watching for changes, running tests, and formatting code.
 
@@ -156,19 +156,19 @@ We are leveraging jQuery, a fast, small, and feature-rich JavaScript library, to
 ## Backend
 
 ### File Structure
-- **todo_board.db**: This file is a SQLite database file used for dev by the application to store data related to todos, users, or other entities.
-- **requirements.txt**: This file contains a list of Python packages required for your project.
-- **.env**: This file is used to store environment variables for your Flask application. It may contain sensitive information like database URLs, API keys, or other configuration settings.
-- **instance**: This directory is created by sqlite for the database instance it is just a empty directory. if deleted it will just be created again when program is started.
+- **todo_board.db** *(This file is a SQLite database file used for dev by the application to store data related to todos, users, or other entities.)*
+- **requirements.txt** *(This file contains a list of Python packages required for your project.)*
+- **.env** *(This file is used to store environment variables for your Flask application. It may contain sensitive information like database URLs, API keys, or other configuration settings.)*
+- **instance** *(This directory is created by sqlite for the database instance it is just a empty directory. if deleted it will just be created again when program is started.)*
 - **src**
-  - **auth.py**: This file contains routes and logic related to user authentication, such as login, logout, and registration.
-  - **models.py**: This file defines the database models for the application.
-  - **\_\_init\_\_.py**: This file marks the src directory as a Python package.
-  - **todo_crud.py**: This file contains routes and logic related to CRUD operations for todos, such as creating, reading, updating, and deleting todos.
-  - **main.py**: This file contains the entry point for the Flask application, including app initialization and configuration.
+  - **auth.py** *(This file contains routes and logic related to user authentication, such as login, logout, and registration.)*
+  - **models.py** *(This file defines the database models for the application.)*
+  - **\_\_init\_\_.py** *(This file marks the src directory as a Python package.)*
+  - **todo_crud.py** *(This file contains routes and logic related to CRUD operations for todos, such as creating, reading, updating, and deleting todos.)*
+  - **main.py** *(This file contains the entry point for the Flask application, including app initialization and configuration.)*
 - **test**
-  - **auth_tests.py**: This file contains unit tests for the authentication routes and logic defined in auth.py.
-  - **todo_crud_tests.py**: This file contains unit tests for the CRUD routes and logic defined in todo_crud.py.
+  - **auth_tests.py** *(This file contains unit tests for the authentication routes and logic defined in auth.py.)*
+  - **todo_crud_tests.py** *(This file contains unit tests for the CRUD routes and logic defined in todo_crud.py.)*
 
 ### Dependencies
 - flask

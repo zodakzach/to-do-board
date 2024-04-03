@@ -1,8 +1,8 @@
 import os
 from flask import Flask, jsonify, request, render_template
-from models import db, bcrypt, User
+from src.models import db, bcrypt, User
 from dotenv import load_dotenv
-from auth import auth_routes
+from src.auth import auth_routes
 from todo_crud import todo_routes
 from flask_login import (
     login_required,
@@ -80,4 +80,9 @@ app.register_blueprint(todo_routes)
 
 if __name__ == "__main__":
     initialize_database()  # initialize database tables
-    app.run(debug=True)
+
+    # Define the IP and port
+    ip = "127.0.0.1"
+    port = 5000
+
+    app.run(host=ip, port=port, debug=True)

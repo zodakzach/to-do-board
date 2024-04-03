@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, Todo
+from src.models import db, Todo
 from flask_login import current_user, login_required
 from datetime import datetime
 
@@ -81,10 +81,24 @@ def update_todo(id):
     if "priority" in data:
         todo.priority = data["priority"]
     if "due_date" in data:
-        todo.due_date = data["due_date"]
+        due_date_str = data["due_date"]
+        if due_date_str:
+            try:
+                due_date = datetime.strptime(due_date_str, "%Y-%m-%dT%H:%M:%SZ")
+                todo.due_date = due_date
+            except ValueError:
+                return (
+                    jsonify(
+                        {
+                            "error": "Invalid due date format. Please use YYYY-MM-DDTHH:MM:SSZ format."
+                        }
+                    ),
+                    400,
+                )
+        else:
+            todo.due_date = None
     if "completed" in data:
         todo.completed = data["completed"]
-
     # Commit changes to the database
     db.session.commit()
 

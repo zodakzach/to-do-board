@@ -5,3 +5,4 @@ psycopg
 flask-login
 python-dotenv
 flask-bcrypt
+flask-testing

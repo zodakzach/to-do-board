@@ -33,7 +33,7 @@ $(document).on("click", "#login-btn", function() {
     // Make POST request
     $.ajax({
     type: 'POST',
-    url: '/login',
+    url: '/auth/login',
     contentType: 'application/json',
     data: JSON.stringify({email: email, password: password}),
     success: function(response) {

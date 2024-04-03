@@ -10771,7 +10771,7 @@ $(document).on("click", "#register-btn", function() {
     // Make POST request
     $.ajax({
         type: 'POST',
-        url: '/register',
+        url: '/auth/register',
         contentType: 'application/json',
         data: JSON.stringify({username: username, email: email, password: password}),
         success: function(response) {
@@ -10829,7 +10829,7 @@ $(document).on("click", "#login-btn", function() {
     // Make POST request
     $.ajax({
     type: 'POST',
-    url: '/login',
+    url: '/auth/login',
     contentType: 'application/json',
     data: JSON.stringify({email: email, password: password}),
     success: function(response) {

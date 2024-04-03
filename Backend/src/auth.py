@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, jsonify, redirect, url_for
-from models import db, User
+from src.models import db, User
 from flask_login import (
     login_user,
     login_required,
@@ -10,7 +10,7 @@ from flask_login import (
 auth_routes = Blueprint("auth_routes", __name__)
 
 
-@auth_routes.route("/login", methods=["POST"])
+@auth_routes.route("/auth/login", methods=["POST"])
 def login():
     data = request.json
     if not all(key in data for key in ["email", "password"]):
@@ -27,14 +27,14 @@ def login():
     return jsonify({"message": "Login successful!"}), 200
 
 
-@auth_routes.route("/logout")
+@auth_routes.route("/auth/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for("index"))
 
 
-@auth_routes.route("/register", methods=["GET", "POST"])
+@auth_routes.route("/auth/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         # Render the register.html template

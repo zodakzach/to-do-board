@@ -59,3 +59,27 @@ def register():
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": "Failed to create user", "details": str(e)}), 500
+
+
+@auth_routes.route("/auth/update", methods=["PUT"])
+@login_required
+def update_user():
+    data = request.json
+    try:
+        current_user.update_user(data)
+        db.session.commit()
+        return jsonify({"message": "User updated successfully"}), 200
+    except ValueError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to update user", "details": str(e)}), 500
+
+
+@auth_routes.route("/auth/delete", methods=["DELETE"])
+@login_required
+def delete_user():
+    current_user.delete_user()
+    logout_user()  # Optionally log out the user after deleting their account
+    return jsonify({"message": "User deleted successfully"}), 200

@@ -219,6 +219,8 @@ By using SQLAlchemy, we can seamlessly switch between different database engines
 - POST /auth/register: Register a new user.
 - POST /auth/login: Log in with existing credentials.
 - GET /auth/logout (Requires authentication): Log out the current user.
+- PUT /auth/update (Requires authentication): Updates current users username, email, and password.
+- DELETE /auth/delete (Requires authentication): Deletes the current user.
 
 #### Todo CRUD Routes
 - POST /todos: Create a new todo. (Requires authentication)

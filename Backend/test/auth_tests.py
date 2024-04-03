@@ -132,6 +132,50 @@ class AuthTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
             self.assertIn(b"Missing required fields", response.data)
 
+    def test_update_user(self):
+        with self.client:
+            # Login first
+            self.client.post(
+                "/auth/login",
+                json={"email": "test@example.com", "password": "test_password"},
+            )
+
+            # Simulate a PUT request to update user information
+            response = self.client.put(
+                "/auth/update",
+                json={
+                    "username": "updated_username",
+                    "email": "updated_email@example.com",
+                    "password": "new_password",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b"User updated successfully", response.data)
+
+            # Check if the user information was updated in the database
+            updated_user = User.query.filter_by(
+                email="updated_email@example.com"
+            ).first()
+            self.assertIsNotNone(updated_user)
+            self.assertEqual(updated_user.username, "updated_username")
+
+    def test_delete_user(self):
+        with self.client:
+            # Login first
+            self.client.post(
+                "/auth/login",
+                json={"email": "test@example.com", "password": "test_password"},
+            )
+
+            # Simulate a DELETE request to delete the user account
+            response = self.client.delete("/auth/delete")
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b"User deleted successfully", response.data)
+
+            # Check if the user account was deleted from the database
+            deleted_user = User.query.filter_by(email="test@example.com").first()
+            self.assertIsNone(deleted_user)
+
 
 if __name__ == "__main__":
     unittest.main()

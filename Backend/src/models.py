@@ -28,6 +28,21 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
 
+    def update_user(self, data):
+        if "username" in data:
+            self.username = data["username"]
+        if "email" in data and data["email"] != self.email:
+            existing_user = User.query.filter_by(email=data["email"]).first()
+            if existing_user:
+                raise ValueError("Email already exists")
+            self.email = data["email"]
+        if "password" in data:
+            self.set_password(data["password"])
+
+    def delete_user(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Todo(db.Model):
     __tablename__ = "todos"

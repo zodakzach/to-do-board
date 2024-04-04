@@ -70,17 +70,17 @@
                 <label for="exampleFormControlInput1" class="form-label"
                   >Task</label
                 >
-                <input
-                  type="text"
+                <textarea
+                  rows="3"
                   class="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Description"
-                />
+                ></textarea>
               </div>
 
               <div class="mb-3">
                 <input
-                  class="form-check-input"
+                  class="form-check-input me-1"
                   type="checkbox"
                   value=""
                   id="flexCheckDefault"
@@ -104,58 +104,76 @@
                 </select>
               </div>
 
-              <div>
-                <label for="datepicker" class="form-label">Due Date</label>
+              <div
+                class="form-check form-switch mb-3"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseDueDate"
+                aria-expanded="false"
+                aria-controls="collapseDueDate"
+              >
+                <label class="form-check-label" for="flexSwitchCheckDefault"
+                  >Due Date</label
+                >
                 <input
-                  type="text"
-                  class="form-control"
-                  id="datepicker"
-                  readonly
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault"
                 />
               </div>
 
-              <div class="input-group mb-3">
-                <label for="hourSel" class="input-group-text">Hour</label>
-                <select
-                  class="form-select"
-                  aria-label="Select Hour"
-                  id="hourSel"
-                >
-                  <option value="12" selected>12</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                </select>
-                <label for="minSel" class="input-group-text">Minute</label>
-                <select
-                  class="form-select"
-                  aria-label="Select Minute"
-                  id="minSel"
-                >
-                  <option value="0" selected>00</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                  <option value="40">40</option>
-                  <option value="50">50</option>
-                </select>
-                <label for="ampmSel" class="input-group-text">AM/PM</label>
-                <select
-                  class="form-select"
-                  aria-label="Select AM/PM"
-                  id="ampmSel"
-                >
-                  <option value="AM" selected>AM</option>
-                  <option value="PM">PM</option>
-                </select>
+              <div class="collapse" id="collapseDueDate">
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="Select a date"
+                  id="datepicker"
+                  readonly
+                />
+
+                <div class="input-group mb-3">
+                  <label for="hourSel" class="input-group-text">Hour</label>
+                  <select
+                    class="form-select"
+                    aria-label="Select Hour"
+                    id="hourSel"
+                  >
+                    <option value="12" selected>12</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                  </select>
+                  <label for="minSel" class="input-group-text">Minute</label>
+                  <select
+                    class="form-select"
+                    aria-label="Select Minute"
+                    id="minSel"
+                  >
+                    <option value="0" selected>00</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                  </select>
+                  <label for="ampmSel" class="input-group-text">AM/PM</label>
+                  <select
+                    class="form-select"
+                    aria-label="Select AM/PM"
+                    id="ampmSel"
+                  >
+                    <option value="AM" selected>AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="modal-footer">

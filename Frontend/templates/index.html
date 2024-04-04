@@ -19,7 +19,7 @@
             id="email"
             placeholder="name@example.com"
           />
-          <p class="text-danger d-none mb-0" id="email-error"></p>
+          <p class="invalid-feedback mb-0" id="email-error"></p>
           <label for="password" class="form-label mt-3">Password</label>
           <input
             type="password"
@@ -28,7 +28,7 @@
             aria-describedby="passwordHelpBlock"
             placeholder="Password"
           />
-          <p class="text-danger d-none mb-0" id="password-error"></p>
+          <p class="invalid-feedback mb-0" id="password-error"></p>
         </div>
         <div class="text-center">
           <!-- Center the button -->
@@ -42,7 +42,9 @@
         </div>
         <div class="text-center mt-5">
           <span>Don't have an account?</span>
-          <a href="{{ url_for('auth_routes.register') }}" class="fw-lighter">Sign Up</a>
+          <a href="{{ url_for('auth_routes.register') }}" class="fw-lighter"
+            >Sign Up</a
+          >
         </div>
       </div>
     </div>

@@ -99,6 +99,7 @@ npm run dev
 ### Dependencies
 - bootstrap: "^5.3.3"
 - jquery: "^3.7.1"
+- js-datepicker: "^5.18.2"
 
 #### Dev Dependencies
 - @rollup/plugin-commonjs: "^25.0.7"
@@ -228,4 +229,3 @@ By using SQLAlchemy, we can seamlessly switch between different database engines
 - GET /todos/<int:id>: Get a specific todo by ID. (Requires authentication)
 - PUT /todos/<int:id>: Update a todo by ID. (Requires authentication)
 - DELETE /todos/<int:id>: Delete a todo by ID. (Requires authentication)
-

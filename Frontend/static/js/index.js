@@ -9,20 +9,20 @@ $(document).on("click", "#login-btn", function() {
     // Validation
     if (!email) {
         $('#email-error').text('This field is required.').removeClass('d-none');
-        $('#email').addClass('border-danger');
+        $('#email').addClass('is-invalid');
         missingValues = true;
     } else {
         $('#email-error').addClass('d-none');
-        $('#email').removeClass('border-danger');
+        $('#email').removeClass('is-invalid');
     }
 
     if (!password) {
         $('#password-error').text('This field is required.').removeClass('d-none');
-        $('#password').addClass('border-danger');
+        $('#password').addClass('is-invalid');
         missingValues = true;
     } else {
         $('#password-error').addClass('d-none');
-        $('#password').removeClass('border-danger');
+        $('#password').removeClass('is-invalid');
     }
 
     // If there are missing values, stop processing
@@ -52,7 +52,7 @@ $(document).on("click", "#login-btn", function() {
             if (response.hasOwnProperty('field')) {
                 var field = response.field;
                 $('#' + field + '-error').text(response.error).removeClass('d-none');
-                $('#' + field).addClass('border-danger');
+                $('#' + field).addClass('is-invalid');
             }
         }        
     }

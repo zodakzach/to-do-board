@@ -31,6 +31,7 @@
           class="form-control"
           aria-label="Search"
           placeholder="Search..."
+          id="search"
         />
         <button class="btn btn-outline-secondary align-top" type="button">
           Search
@@ -67,15 +68,14 @@
             </div>
             <div class="modal-body">
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label"
-                  >Task</label
-                >
+                <label for="addTaskDesc" class="form-label">Task</label>
                 <textarea
                   rows="3"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  id="addTaskDesc"
                   placeholder="Description"
                 ></textarea>
+                <p class="invalid-feedback mb-0" id="addTaskDesc-error"></p>
               </div>
 
               <div class="mb-3">
@@ -83,42 +83,46 @@
                   class="form-check-input me-1"
                   type="checkbox"
                   value=""
-                  id="flexCheckDefault"
+                  id="addTaskCompCheck"
                 />
-                <label class="form-check-label" for="flexCheckDefault"
+                <label class="form-check-label" for="addTaskCompCheck"
                   >Completed</label
                 >
               </div>
 
               <div class="mb-3">
-                <label for="prioritySel" class="form-label">Priority</label>
+                <label for="addTaskPrioritySel" class="form-label"
+                  >Priority</label
+                >
                 <select
                   class="form-select"
                   aria-label="Default select example"
-                  id="prioritySel"
+                  id="addTaskPrioritySel"
                 >
                   <option selected>Select a Priority</option>
                   <option value="1">Low</option>
                   <option value="2">Medium</option>
                   <option value="3">High</option>
                 </select>
+                <p
+                  class="invalid-feedback mb-0"
+                  id="addTaskPrioritySel-error"
+                ></p>
               </div>
 
-              <div
-                class="form-check form-switch mb-3"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseDueDate"
-                aria-expanded="false"
-                aria-controls="collapseDueDate"
-              >
-                <label class="form-check-label" for="flexSwitchCheckDefault"
+              <div class="form-check form-switch mb-3">
+                <label class="form-check-label" for="addTaskDueDateSwitch"
                   >Due Date</label
                 >
                 <input
                   class="form-check-input"
                   type="checkbox"
                   role="switch"
-                  id="flexSwitchCheckDefault"
+                  id="addTaskDueDateSwitch"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseDueDate"
+                  aria-expanded="false"
+                  aria-controls="collapseDueDate"
                 />
               </div>
 
@@ -127,16 +131,22 @@
                   type="text"
                   class="form-control mb-3"
                   placeholder="Select a date"
-                  id="datepicker"
+                  id="addTaskDatePicker"
                   readonly
                 />
+                <p
+                  class="invalid-feedback mb-3"
+                  id="addTaskDatePicker-error"
+                ></p>
 
                 <div class="input-group mb-3">
-                  <label for="hourSel" class="input-group-text">Hour</label>
+                  <label for="addTaskHourSel" class="input-group-text"
+                    >Hour</label
+                  >
                   <select
                     class="form-select"
                     aria-label="Select Hour"
-                    id="hourSel"
+                    id="addTaskHourSel"
                   >
                     <option value="12" selected>12</option>
                     <option value="1">1</option>
@@ -151,11 +161,13 @@
                     <option value="10">10</option>
                     <option value="11">11</option>
                   </select>
-                  <label for="minSel" class="input-group-text">Minute</label>
+                  <label for="addTaskMinSel" class="input-group-text"
+                    >Minute</label
+                  >
                   <select
                     class="form-select"
                     aria-label="Select Minute"
-                    id="minSel"
+                    id="addTaskMinSel"
                   >
                     <option value="0" selected>00</option>
                     <option value="10">10</option>
@@ -164,11 +176,13 @@
                     <option value="40">40</option>
                     <option value="50">50</option>
                   </select>
-                  <label for="ampmSel" class="input-group-text">AM/PM</label>
+                  <label for="addTaskAmPmSel" class="input-group-text"
+                    >AM/PM</label
+                  >
                   <select
                     class="form-select"
                     aria-label="Select AM/PM"
-                    id="ampmSel"
+                    id="addTaskAmPmSel"
                   >
                     <option value="AM" selected>AM</option>
                     <option value="PM">PM</option>
@@ -184,7 +198,9 @@
               >
                 Close
               </button>
-              <button type="button" class="btn btn-primary">Add Task</button>
+              <button type="button" class="btn btn-primary" id="addTaskBtn">
+                Add Task
+              </button>
             </div>
           </div>
         </div>
@@ -203,29 +219,7 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody class="text-center">
-      <tr>
-        <td>Complete project proposal</td>
-        <td class="table-danger">High</td>
-        <td>2024-04-10</td>
-        <td>Yes</td>
-        <td>Edit | Delete</td>
-      </tr>
-      <tr>
-        <td>Prepare presentation slides</td>
-        <td>Medium</td>
-        <td>2024-04-15</td>
-        <td>No</td>
-        <td>Edit | Delete</td>
-      </tr>
-      <tr>
-        <td>Send progress report</td>
-        <td>Low</td>
-        <td>2024-04-20</td>
-        <td>No</td>
-        <td>Edit | Delete</td>
-      </tr>
-    </tbody>
+    <tbody class="text-center"></tbody>
   </table>
 </div>
 {% endblock %}

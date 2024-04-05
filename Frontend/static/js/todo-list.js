@@ -1,8 +1,12 @@
 import 'bootstrap/js/dist/dropdown';
 import 'bootstrap/js/dist/modal';
 import 'bootstrap/js/dist/collapse';
+import Collapse from 'bootstrap/js/dist/collapse';
+
 import $ from 'jquery';
 import datepicker from 'js-datepicker'
+
+var addTaskDueDateCollapsed = true;
 
 // Initialize datepicker
 $(function(){
@@ -17,6 +21,19 @@ $(function(){
             input.value = value;
         },
         minDate: today // Set minimum date to today
+    });
+
+    const myCollapsible = document.getElementById('collapseDueDate')
+    myCollapsible.addEventListener('hidden.bs.collapse', event => {
+        addTaskDueDateCollapsed = true
+    })
+    myCollapsible.addEventListener('shown.bs.collapse', event => {
+        addTaskDueDateCollapsed = false
+    })
+
+    const addTaskModal = document.getElementById('addTaskModal');
+    addTaskModal.addEventListener('hidden.bs.modal', event => {
+        resetModal();
     });
 
     $(document).on('click', '#addTaskBtn', function() {
@@ -47,6 +64,7 @@ $(function(){
         var dueDate = ''; // Initialize due date string
 
         if(dueDateSwitch) {
+            console.log('test');
             var date = $('#addTaskDatePicker').val(); // Retrieve datepicker input value
             var hour = $('#addTaskHourSel').val(); // Retrieve hour input value
             var min = $('#addTaskMinSel').val(); // Retrieve minute input value
@@ -74,13 +92,9 @@ $(function(){
         var data = {
             task: taskDescription,
             completed: completed,
-            priority: priority
+            priority: priority,
+            due_date: dueDate
         };
-    
-        // Include due date in data object if it's not an empty string
-        if (dueDate !== '') {
-            data.due_date = dueDate;
-        }
     
         // Send AJAX POST request
         $.ajax({
@@ -91,6 +105,7 @@ $(function(){
             success: function(response) {
                 // Handle success response
                 console.log('Task added successfully:', response);
+                resetModal();
             },
             error: function(xhr, status, error) {
                 // Handle error response
@@ -99,3 +114,37 @@ $(function(){
         });  
     });
 });
+
+function resetModal() {
+    // Reset all input fields
+    $('#addTaskDesc').val('');
+    $('#addTaskDesc-error').addClass('d-none');
+    $('#addTaskDesc').removeClass('is-invalid');
+
+    $('#addTaskCompCheck').prop('checked', false);
+    
+    $('#addTaskPrioritySel').val('Select a Priority');
+    $('#addTaskPrioritySel-error').addClass('d-none');
+    $('#addTaskPrioritySel').removeClass('is-invalid');
+
+    $('#addTaskDueDateSwitch').prop('checked', false);
+
+    $('#addTaskDatePicker').val(''); // Reset datepicker input value
+    $('#addTaskDatePicker-error').text('');
+    $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
+
+    $('#addTaskHourSel').val('12'); // Reset hour input value to default
+    $('#addTaskMinSel').val('0'); // Reset minute input value to default
+    $('#addTaskAmPmSel').val('AM'); // Reset AM/PM input value to default
+
+    // Get the Bootstrap Collapse instance associated with #collapseDueDate element
+    var collapseInstance = Collapse.getInstance(document.getElementById('collapseDueDate'));
+
+    if (collapseInstance) {
+        // Check if the collapse element is currently shown
+        if (!addTaskDueDateCollapsed) {
+            // If it's not shown, toggle the collapse state
+            collapseInstance.toggle();
+        }
+    }
+}

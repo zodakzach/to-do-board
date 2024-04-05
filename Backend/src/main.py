@@ -1,15 +1,13 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import Flask, jsonify, request, render_template
-from src.models import db, bcrypt, User
+from src.models import db, bcrypt, User, Todo
 from dotenv import load_dotenv
 from src.auth import auth_routes
 from todo_crud import todo_routes
-from flask_login import (
-    login_required,
-    LoginManager,
-)
+from flask_login import login_required, LoginManager, current_user
 
 app = Flask(
     __name__,
@@ -70,7 +68,12 @@ def index():
 @app.route("/todo-list")
 @login_required
 def todo_list():
-    return render_template("todo-list.html")
+    # Fetch all todos for the current user
+    user_todos = (
+        Todo.query.filter_by(user_id=current_user.id).order_by(Todo.created_at).all()
+    )
+
+    return render_template("todo-list.html", user_todos=user_todos)
 
 
 # auth routes

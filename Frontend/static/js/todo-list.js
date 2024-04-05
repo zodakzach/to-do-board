@@ -64,7 +64,6 @@ $(function(){
         var dueDate = ''; // Initialize due date string
 
         if(dueDateSwitch) {
-            console.log('test');
             var date = $('#addTaskDatePicker').val(); // Retrieve datepicker input value
             var hour = $('#addTaskHourSel').val(); // Retrieve hour input value
             var min = $('#addTaskMinSel').val(); // Retrieve minute input value
@@ -80,7 +79,16 @@ $(function(){
                 $('#addTaskDatePicker-error').text('');
                 $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
                 // Construct due date string in the format "YYYY-MM-DDTHH:MM:SSZ"
-                dueDate = date + 'T' + ((ampm === 'PM' && parseInt(hour) !== 12) ? (parseInt(hour) + 12) : hour) + ':' + min.padStart(2, '0') + ':00Z';
+                // Adjust time to 24-hour format
+                let hour24 = parseInt(hour);
+                if (ampm === 'PM' && hour !== '12') {
+                    hour24 += 12;
+                } else if (ampm === 'AM' && hour === '12') {
+                    hour24 = 0; // 12 AM should be 0 in 24-hour format
+                }
+
+                // Construct the due date string
+                dueDate = date + 'T' + hour24.toString().padStart(2, '0') + ':' + min.padStart(2, '0') + ':00Z';         
             }
         }
 
@@ -104,8 +112,9 @@ $(function(){
             data: JSON.stringify(data),
             success: function(response) {
                 // Handle success response
-                console.log('Task added successfully:', response);
+                console.log('Task added successfully:', response.message);
                 resetModal();
+                addTodo(response.todo);
             },
             error: function(xhr, status, error) {
                 // Handle error response
@@ -147,4 +156,33 @@ function resetModal() {
             collapseInstance.toggle();
         }
     }
-}
+};
+
+function addTodo(todo) {
+    // Get the table body element
+    const tableBody = document.getElementById("tablebody");
+
+    // Create a new table row
+    const newRow = document.createElement("tr");
+
+    var formattedDueDate = 'None'
+
+    if (todo.due_date) {
+        // Remove 'T' and 'Z' from the date string
+        formattedDueDate = todo.due_date.replace('T', ' ').replace('Z', '');
+    }
+    
+    // Populate the new row with todo data
+    newRow.innerHTML = `
+        <td>${todo.task}</td>
+        <td>${todo.priority}</td>
+        <td>${formattedDueDate}</td>
+        <td>${todo.completed ? "Yes" : "No"}</td>
+        <td>
+            <!-- Add action buttons here -->
+        </td>
+    `;
+
+    // Append the new row to the table body
+    tableBody.appendChild(newRow);
+};

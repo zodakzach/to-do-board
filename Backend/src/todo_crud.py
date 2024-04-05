@@ -40,7 +40,15 @@ def create_todo():
     db.session.add(new_todo)
     db.session.commit()
 
-    return jsonify({"message": "Todo created successfully"}), 201
+    serialized_todo = new_todo.serialize()
+
+    # Remove the user_id from the serialized data
+    serialized_todo.pop("user_id", None)
+
+    # Combine the success message and serialized todo into a single dictionary
+    response_data = {"message": "Todo created successfully", "todo": serialized_todo}
+
+    return jsonify(response_data), 201
 
 
 @todo_routes.route("/todos", methods=["GET"])

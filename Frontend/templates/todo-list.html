@@ -100,9 +100,9 @@
                   id="addTaskPrioritySel"
                 >
                   <option selected>Select a Priority</option>
-                  <option value="1">Low</option>
-                  <option value="2">Medium</option>
-                  <option value="3">High</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
                 </select>
                 <p
                   class="invalid-feedback mb-0"
@@ -219,7 +219,19 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody class="text-center"></tbody>
+    <tbody class="text-center" id="tablebody">
+      {% for todo in user_todos %}
+      <tr>
+        <td>{{ todo.task }}</td>
+        <td>{{ todo.priority }}</td>
+        <td>{{ todo.due_date }}</td>
+        <td>{{ "Yes" if todo.completed else "No" }}</td>
+        <td>
+          <!-- Add action buttons here -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock %}

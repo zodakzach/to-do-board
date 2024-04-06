@@ -94,6 +94,7 @@ $(document).on("click", "#register-btn", function() {
                     $('#' + field + '-error').text(response.error).removeClass('d-none');
                     $('#' + field).addClass('is-invalid');
                 }
-            }        }
+            }        
+        }
     });
 });

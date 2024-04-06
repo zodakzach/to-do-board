@@ -10817,7 +10817,8 @@ $(document).on("click", "#register-btn", function() {
                     $('#' + field + '-error').text(response.error).removeClass('d-none');
                     $('#' + field).addClass('is-invalid');
                 }
-            }        }
+            }        
+        }
     });
 });
 
@@ -15169,93 +15170,100 @@ $(function(){
         resetModal();
     });
 
-    $(document).on('click', '#addTaskBtn', function() {
-        var taskDescription = $('#addTaskDesc').val();
-        var completed = $('#addTaskCompCheck').prop('checked');
-        var priority = $('#addTaskPrioritySel').val();
-        var dueDateSwitch = $('#addTaskDueDateSwitch').prop('checked');
-
-        var error = false;
-        // Check if task description and priority are selected
-        if (taskDescription.trim() === '') {
-            $('#addTaskDesc-error').text('This field is required').removeClass('d-none');
-            $('#addTaskDesc').addClass('is-invalid');
-            error = true;
-        }else {
-            $('#addTaskDesc-error').addClass('d-none');
-            $('#addTaskDesc').removeClass('is-invalid');
-        }
-        if (priority === 'Select a Priority') {
-            $('#addTaskPrioritySel-error').text('This field is required').removeClass('d-none');
-            $('#addTaskPrioritySel').addClass('is-invalid');
-            error = true;
-        }else {
-            $('#addTaskPrioritySel-error').addClass('d-none');
-            $('#addTaskPrioritySel').removeClass('is-invalid');
-        }
-
-        var dueDate = ''; // Initialize due date string
-
-        if(dueDateSwitch) {
-            var date = $('#addTaskDatePicker').val(); // Retrieve datepicker input value
-            var hour = $('#addTaskHourSel').val(); // Retrieve hour input value
-            var min = $('#addTaskMinSel').val(); // Retrieve minute input value
-            var ampm = $('#addTaskAmPmSel').val(); // Retrieve AM/PM input value
-    
-            // Check if datepicker input has a value
-            if (!date) {
-                $('#addTaskDatePicker').addClass('is-invalid').removeClass('mb-3');
-                $('#addTaskDatePicker-error').text('This field is required');
-                error = true;
-            }
-            else {
-                $('#addTaskDatePicker-error').text('');
-                $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
-                // Construct due date string in the format "YYYY-MM-DDTHH:MM:SSZ"
-                // Adjust time to 24-hour format
-                let hour24 = parseInt(hour);
-                if (ampm === 'PM' && hour !== '12') {
-                    hour24 += 12;
-                } else if (ampm === 'AM' && hour === '12') {
-                    hour24 = 0; // 12 AM should be 0 in 24-hour format
-                }
-
-                // Construct the due date string
-                dueDate = date + 'T' + hour24.toString().padStart(2, '0') + ':' + min.padStart(2, '0') + ':00Z';         
-            }
-        }
-
-        if(error) {
-            return;
-        }
-    
-        // Prepare data object for AJAX request
-        var data = {
-            task: taskDescription,
-            completed: completed,
-            priority: priority,
-            due_date: dueDate
-        };
-    
-        // Send AJAX POST request
-        $.ajax({
-            type: 'POST',
-            url: '/todos',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function(response) {
-                // Handle success response
-                console.log('Task added successfully:', response.message);
-                resetModal();
-                addTodo(response.todo);
-            },
-            error: function(xhr, status, error) {
-                // Handle error response
-                console.error('Error adding task:', error);
-            }
-        });  
+    $('#addTaskBtn').on("click", function() {
+        // Call the addTask function when the button is clicked
+        addTask();
     });
+
+    addTodoActionListeners();
 });
+
+function addTask(){
+    var taskDescription = $('#addTaskDesc').val();
+    var completed = $('#addTaskCompCheck').prop('checked');
+    var priority = $('#addTaskPrioritySel').val();
+    var dueDateSwitch = $('#addTaskDueDateSwitch').prop('checked');
+
+    var error = false;
+    // Check if task description and priority are selected
+    if (taskDescription.trim() === '') {
+        $('#addTaskDesc-error').text('This field is required').removeClass('d-none');
+        $('#addTaskDesc').addClass('is-invalid');
+        error = true;
+    }else {
+        $('#addTaskDesc-error').addClass('d-none');
+        $('#addTaskDesc').removeClass('is-invalid');
+    }
+    if (priority === 'Select a Priority') {
+        $('#addTaskPrioritySel-error').text('This field is required').removeClass('d-none');
+        $('#addTaskPrioritySel').addClass('is-invalid');
+        error = true;
+    }else {
+        $('#addTaskPrioritySel-error').addClass('d-none');
+        $('#addTaskPrioritySel').removeClass('is-invalid');
+    }
+
+    var dueDate = ''; // Initialize due date string
+
+    if(dueDateSwitch) {
+        var date = $('#addTaskDatePicker').val(); // Retrieve datepicker input value
+        var hour = $('#addTaskHourSel').val(); // Retrieve hour input value
+        var min = $('#addTaskMinSel').val(); // Retrieve minute input value
+        var ampm = $('#addTaskAmPmSel').val(); // Retrieve AM/PM input value
+
+        // Check if datepicker input has a value
+        if (!date) {
+            $('#addTaskDatePicker').addClass('is-invalid').removeClass('mb-3');
+            $('#addTaskDatePicker-error').text('This field is required');
+            error = true;
+        }
+        else {
+            $('#addTaskDatePicker-error').text('');
+            $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
+            // Construct due date string in the format "YYYY-MM-DDTHH:MM:SSZ"
+            // Adjust time to 24-hour format
+            let hour24 = parseInt(hour);
+            if (ampm === 'PM' && hour !== '12') {
+                hour24 += 12;
+            } else if (ampm === 'AM' && hour === '12') {
+                hour24 = 0; // 12 AM should be 0 in 24-hour format
+            }
+
+            // Construct the due date string
+            dueDate = date + 'T' + hour24.toString().padStart(2, '0') + ':' + min.padStart(2, '0') + ':00Z';         
+        }
+    }
+
+    if(error) {
+        return;
+    }
+
+    // Prepare data object for AJAX request
+    var data = {
+        task: taskDescription,
+        completed: completed,
+        priority: priority,
+        due_date: dueDate
+    };
+
+    // Send AJAX POST request
+    $.ajax({
+        type: 'POST',
+        url: '/todos',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+            // Handle success response
+            console.log('Task added successfully:', response.message);
+            resetModal();
+            addTodo(response.todo);
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error adding task:', error);
+        }
+    });  
+}
 
 function resetModal() {
     // Reset all input fields
@@ -15290,6 +15298,7 @@ function resetModal() {
         }
     }
 }
+
 function addTodo(todo) {
     // Get the table body element
     const tableBody = document.getElementById("tablebody");
@@ -15311,10 +15320,78 @@ function addTodo(todo) {
         <td>${formattedDueDate}</td>
         <td>${todo.completed ? "Yes" : "No"}</td>
         <td>
-            <!-- Add action buttons here -->
+        ${!todo.completed ? `
+            <button class="btn btn-success btn-sm fw-semibold" data-todo-id="${todo.id}" id="completeTask${todo.id}">Mark as Complete</button>
+            <button class="btn btn-primary btn-sm fw-semibold" data-todo-id="${todo.id}" id="editTask${todo.id}">Edit</button>
+        ` : ''}
+        <button class="btn btn-danger btn-sm fw-semibold" data-todo-id="${todo.id}" id="deleteTask${todo.id}">Delete</button>
         </td>
     `;
 
+    // Set the ID of the new row to 'row' + todo ID
+    newRow.id = 'row' + todo.id;
+
     // Append the new row to the table body
     tableBody.appendChild(newRow);
+
+    addTodoActionListeners();
+}
+
+function deleteTodo(todoId) {
+    // Send an AJAX request to delete the todo
+    $.ajax({
+        type: 'DELETE',
+        url: '/todos/' + todoId,
+        success: function(response) {
+            // Handle success response
+            console.log('Todo deleted successfully:', response.message);
+
+            $('#row' + todoId).remove();
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error deleting todo:', error);
+        }
+    });
+}
+
+function markAsComplete(todoId) {
+    // Send an AJAX request to update the todo as complete
+    $.ajax({
+        type: 'PUT',
+        url: '/todos/' + todoId,
+        contentType: 'application/json',
+        data: JSON.stringify({ completed: true }), // Mark the todo as completed
+        success: function(response) {
+            // Handle success response
+            console.log('Todo marked as complete:', response.message);
+            // Update the row to reflect the completed status
+            $('#row' + todoId + ' td:nth-child(4)').text('Yes'); // Update status column to "Yes"
+            // Remove the "Mark as Complete" and "Edit" buttons
+            $('#completeTask' + todoId).remove();
+            $('#editTask' + todoId).remove();
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error marking todo as complete:', error);
+        }
+    });
+}
+
+function addTodoActionListeners() {
+    // jQuery code to handle click event on delete button
+    $("[id^='deleteTask']").on('click', function() {
+        // Get the todo ID from the data-todo-id attribute
+        var todoId = $(this).data('todo-id');
+        // Call the deleteTodo function passing the todo ID
+        deleteTodo(todoId);
+    });
+
+    // jQuery code to handle click event on delete button
+    $("[id^='completeTask']").on('click', function() {
+        // Get the todo ID from the data-todo-id attribute
+        var todoId = $(this).data('todo-id');
+        // Call the deleteTodo function passing the todo ID
+        markAsComplete(todoId);
+    });
 }

@@ -221,13 +221,36 @@
     </thead>
     <tbody class="text-center" id="tablebody">
       {% for todo in user_todos %}
-      <tr>
+      <tr id="row{{todo.id}}">
         <td>{{ todo.task }}</td>
         <td>{{ todo.priority }}</td>
         <td>{{ todo.due_date }}</td>
         <td>{{ "Yes" if todo.completed else "No" }}</td>
         <td>
           <!-- Add action buttons here -->
+          {% if not todo.completed %}
+          <button
+            class="btn btn-success btn-sm fw-semibold"
+            data-todo-id="{{ todo.id }}"
+            id="completeTask{{todo.id}}"
+          >
+            Mark as Complete
+          </button>
+          <button
+            class="btn btn-primary btn-sm fw-semibold"
+            data-todo-id="{{ todo.id }}"
+            id="editTask{{todo.id}}"
+          >
+            Edit
+          </button>
+          {% endif %}
+          <button
+            class="btn btn-danger btn-sm fw-semibold"
+            data-todo-id="{{ todo.id }}"
+            id="deleteTask{{todo.id}}"
+          >
+            Delete
+          </button>
         </td>
       </tr>
       {% endfor %}

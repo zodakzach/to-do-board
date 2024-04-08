@@ -14876,6 +14876,9 @@ function requireScrollbar () {
 	
 } (modal));
 
+var modalExports = modal.exports;
+var Modal = /*@__PURE__*/getDefaultExportFromCjs(modalExports);
+
 var collapse = {exports: {}};
 
 /*!
@@ -15140,13 +15143,17 @@ var datepicker_min = {exports: {}};
 var datepicker_minExports = datepicker_min.exports;
 var datepicker = /*@__PURE__*/getDefaultExportFromCjs(datepicker_minExports);
 
-var addTaskDueDateCollapsed = true;
+var taskDueDateCollapsed = true;
+// Declare global variables
+var modalInstance;
+var collapseInstance;
+
 
 // Initialize datepicker
 $(function(){
     const today = new Date(); // Get today's date
 
-    datepicker('#addTaskDatePicker', {
+    datepicker('#taskDatePicker', {
         formatter: (input, date, instance) => {
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add padding if needed
@@ -15157,21 +15164,23 @@ $(function(){
         minDate: today // Set minimum date to today
     });
 
+    modalInstance = Modal.getOrCreateInstance(document.getElementById('taskModal'));
+
     const myCollapsible = document.getElementById('collapseDueDate');
     myCollapsible.addEventListener('hidden.bs.collapse', event => {
-        addTaskDueDateCollapsed = true;
+        taskDueDateCollapsed = true;
     });
     myCollapsible.addEventListener('shown.bs.collapse', event => {
-        addTaskDueDateCollapsed = false;
+        taskDueDateCollapsed = false;
     });
 
-    const addTaskModal = document.getElementById('addTaskModal');
-    addTaskModal.addEventListener('hidden.bs.modal', event => {
+    const taskModal = document.getElementById('taskModal');
+    taskModal.addEventListener('hidden.bs.modal', event => {
         resetModal();
     });
 
-    $('#addTaskBtn').on("click", function() {
-        // Call the addTask function when the button is clicked
+    $('#taskBtn').on("click", function() {
+        // Call the task function when the button is clicked
         addTask();
     });
 
@@ -15179,72 +15188,20 @@ $(function(){
 });
 
 function addTask(){
-    var taskDescription = $('#addTaskDesc').val();
-    var completed = $('#addTaskCompCheck').prop('checked');
-    var priority = $('#addTaskPrioritySel').val();
-    var dueDateSwitch = $('#addTaskDueDateSwitch').prop('checked');
+    // Call ValidateModal function
+    var validationResult = ValidateModal();
 
-    var error = false;
-    // Check if task description and priority are selected
-    if (taskDescription.trim() === '') {
-        $('#addTaskDesc-error').text('This field is required').removeClass('d-none');
-        $('#addTaskDesc').addClass('is-invalid');
-        error = true;
-    }else {
-        $('#addTaskDesc-error').addClass('d-none');
-        $('#addTaskDesc').removeClass('is-invalid');
-    }
-    if (priority === 'Select a Priority') {
-        $('#addTaskPrioritySel-error').text('This field is required').removeClass('d-none');
-        $('#addTaskPrioritySel').addClass('is-invalid');
-        error = true;
-    }else {
-        $('#addTaskPrioritySel-error').addClass('d-none');
-        $('#addTaskPrioritySel').removeClass('is-invalid');
-    }
-
-    var dueDate = ''; // Initialize due date string
-
-    if(dueDateSwitch) {
-        var date = $('#addTaskDatePicker').val(); // Retrieve datepicker input value
-        var hour = $('#addTaskHourSel').val(); // Retrieve hour input value
-        var min = $('#addTaskMinSel').val(); // Retrieve minute input value
-        var ampm = $('#addTaskAmPmSel').val(); // Retrieve AM/PM input value
-
-        // Check if datepicker input has a value
-        if (!date) {
-            $('#addTaskDatePicker').addClass('is-invalid').removeClass('mb-3');
-            $('#addTaskDatePicker-error').text('This field is required');
-            error = true;
-        }
-        else {
-            $('#addTaskDatePicker-error').text('');
-            $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
-            // Construct due date string in the format "YYYY-MM-DDTHH:MM:SSZ"
-            // Adjust time to 24-hour format
-            let hour24 = parseInt(hour);
-            if (ampm === 'PM' && hour !== '12') {
-                hour24 += 12;
-            } else if (ampm === 'AM' && hour === '12') {
-                hour24 = 0; // 12 AM should be 0 in 24-hour format
-            }
-
-            // Construct the due date string
-            dueDate = date + 'T' + hour24.toString().padStart(2, '0') + ':' + min.padStart(2, '0') + ':00Z';         
-        }
-    }
-
-    if(error) {
+    // Check the result
+    if (typeof validationResult === 'string') {
+        // If validationResult is a string, it means there's an error
+        console.error(validationResult); // Output the error message
         return;
+    } else {
+        // If validationResult is not a string, it contains the data object
+        var data = validationResult;
+        // Proceed with your AJAX request or any other operation using the 'data' object
+        console.log("Data object for AJAX request:", data);
     }
-
-    // Prepare data object for AJAX request
-    var data = {
-        task: taskDescription,
-        completed: completed,
-        priority: priority,
-        due_date: dueDate
-    };
 
     // Send AJAX POST request
     $.ajax({
@@ -15265,34 +15222,108 @@ function addTask(){
     });  
 }
 
+function ValidateModal(){
+    var taskDescription = $('#taskDesc').val();
+    var completed = $('#taskCompCheck').prop('checked');
+    var priority = $('#taskPrioritySel').val();
+    var dueDateSwitch = $('#taskDueDateSwitch').prop('checked');
+
+    var error = false;
+    // Check if task description and priority are selected
+    if (taskDescription.trim() === '') {
+        $('#taskDesc-error').text('This field is required').removeClass('d-none');
+        $('#taskDesc').addClass('is-invalid');
+        error = true;
+    }else {
+        $('#taskDesc-error').addClass('d-none');
+        $('#taskDesc').removeClass('is-invalid');
+    }
+    if (priority === 'Select a Priority') {
+        $('#taskPrioritySel-error').text('This field is required').removeClass('d-none');
+        $('#taskPrioritySel').addClass('is-invalid');
+        error = true;
+    }else {
+        $('#taskPrioritySel-error').addClass('d-none');
+        $('#taskPrioritySel').removeClass('is-invalid');
+    }
+
+    var dueDate = ''; // Initialize due date string
+
+    if(dueDateSwitch) {
+        var date = $('#taskDatePicker').val(); // Retrieve datepicker input value
+        var hour = $('#taskHourSel').val(); // Retrieve hour input value
+        var min = $('#taskMinSel').val(); // Retrieve minute input value
+        var ampm = $('#taskAmPmSel').val(); // Retrieve AM/PM input value
+
+        // Check if datepicker input has a value
+        if (!date) {
+            $('#taskDatePicker').addClass('is-invalid').removeClass('mb-3');
+            $('#taskDatePicker-error').text('This field is required');
+            error = true;
+        }
+        else {
+            $('#taskDatePicker-error').text('');
+            $('#taskDatePicker').removeClass('is-invalid').addClass('mb-3');
+            // Construct due date string in the format "YYYY-MM-DDTHH:MM:SSZ"
+            // Adjust time to 24-hour format
+            let hour24 = parseInt(hour);
+            if (ampm === 'PM' && hour !== '12') {
+                hour24 += 12;
+            } else if (ampm === 'AM' && hour === '12') {
+                hour24 = 0; // 12 AM should be 0 in 24-hour format
+            }
+
+            // Construct the due date string
+            dueDate = date + 'T' + hour24.toString().padStart(2, '0') + ':' + min.padStart(2, '0') + ':00Z';         
+        }
+    }
+
+    if (error) {
+        return "Please fix the errors before proceeding.";
+    } else {
+        // Prepare data object for AJAX request
+        var data = {
+            task: taskDescription,
+            completed: completed,
+            priority: priority,
+            due_date: dueDate
+        };
+        return data; // Return data object for AJAX request
+    }
+}
+
 function resetModal() {
+    $('#taskModalLabel').text('Add Task');
+    $('#taskBtn').off("click").on("click", addTask);
+
     // Reset all input fields
-    $('#addTaskDesc').val('');
-    $('#addTaskDesc-error').addClass('d-none');
-    $('#addTaskDesc').removeClass('is-invalid');
+    $('#taskDesc').val('');
+    $('#taskDesc-error').addClass('d-none');
+    $('#taskDesc').removeClass('is-invalid');
 
-    $('#addTaskCompCheck').prop('checked', false);
+    $('#taskCompCheck').prop('checked', false);
     
-    $('#addTaskPrioritySel').val('Select a Priority');
-    $('#addTaskPrioritySel-error').addClass('d-none');
-    $('#addTaskPrioritySel').removeClass('is-invalid');
+    $('#taskPrioritySel').val('Select a Priority');
+    $('#taskPrioritySel-error').addClass('d-none');
+    $('#taskPrioritySel').removeClass('is-invalid');
 
-    $('#addTaskDueDateSwitch').prop('checked', false);
+    $('#taskBtn').text('Add Task');
 
-    $('#addTaskDatePicker').val(''); // Reset datepicker input value
-    $('#addTaskDatePicker-error').text('');
-    $('#addTaskDatePicker').removeClass('is-invalid').addClass('mb-3');
+    $('#taskDueDateSwitch').prop('checked', false);
 
-    $('#addTaskHourSel').val('12'); // Reset hour input value to default
-    $('#addTaskMinSel').val('0'); // Reset minute input value to default
-    $('#addTaskAmPmSel').val('AM'); // Reset AM/PM input value to default
+    $('#taskDatePicker').val(''); // Reset datepicker input value
+    $('#taskDatePicker-error').text('');
+    $('#taskDatePicker').removeClass('is-invalid').addClass('mb-3');
 
-    // Get the Bootstrap Collapse instance associated with #collapseDueDate element
-    var collapseInstance = Collapse.getInstance(document.getElementById('collapseDueDate'));
+    $('#taskHourSel').val('12'); // Reset hour input value to default
+    $('#taskMinSel').val('00'); // Reset minute input value to default
+    $('#taskAmPmSel').val('AM'); // Reset AM/PM input value to default
+
+    collapseInstance = Collapse.getInstance(document.getElementById('collapseDueDate'));
 
     if (collapseInstance) {
         // Check if the collapse element is currently shown
-        if (!addTaskDueDateCollapsed) {
+        if (!taskDueDateCollapsed) {
             // If it's not shown, toggle the collapse state
             collapseInstance.toggle();
         }
@@ -15378,6 +15409,129 @@ function markAsComplete(todoId) {
     });
 }
 
+function editTodo(todoId) {
+    // Find the row corresponding to the todoId
+    var row = $('#row' + todoId);
+
+    // Extract task data from the row
+    var taskDescription = row.find('td:nth-child(1)').text().trim();
+    var priority = row.find('td:nth-child(2)').text().trim();
+    var dueDate = row.find('td:nth-child(3)').text().trim();
+    var completed = row.find('td:nth-child(4)').text().trim() === "Yes";
+
+    // Update modal title to "Edit Task"
+    $('#taskModalLabel').text('Edit Task');
+
+    // Populate modal fields with existing task data
+    $('#taskDesc').val(taskDescription);
+    $('#taskCompCheck').prop('checked', completed);
+    $('#taskPrioritySel').val(priority);
+    $('#taskBtn').text('Save Task');
+
+    // Set due date switch based on the presence of due date
+    var dueDateSwitch = dueDate !== 'None';
+    $('#taskDueDateSwitch').prop('checked', dueDateSwitch);
+
+    if (dueDateSwitch) {
+        // Split the dueDate string into date and time components
+        var dueDateParts = dueDate.split(' ');
+        var date = dueDateParts[0]; // Extract date part
+
+        var time = ''; // Initialize time variable
+
+        // If dueDateParts has a second element (i.e., time part is present)
+        if (dueDateParts.length > 1) {
+            time = dueDateParts[1]; // Extract time part
+        }
+
+        // If time is not empty, extract hour and minute
+        var hour = '';
+        var min = '';
+        if (time !== '') {
+            hour = time.split(':')[0]; // Extract hour from time
+            min = time.split(':')[1]; // Extract minute from time
+        }
+
+        // Determine AM/PM based on hour
+        var ampm = hour >= 12 ? 'PM' : 'AM';
+
+        // Adjust hour to 12-hour format
+        hour = hour % 12 || 12;
+
+        $('#taskDatePicker').val(date); // Set date input value
+        $('#taskHourSel').val(hour); // Set hour input value
+        $('#taskMinSel').val(min); // Set minute input value
+        $('#taskAmPmSel').val(ampm); // Set AM/PM input value
+
+        collapseInstance = Collapse.getOrCreateInstance(document.getElementById('collapseDueDate'));
+
+        if (collapseInstance) {
+            // Check if the collapse element is currently shown
+            if (taskDueDateCollapsed) {
+                // If it's not shown, toggle the collapse state
+                collapseInstance.toggle();
+            }
+        }
+    }
+    $('#taskBtn').off("click").on("click", function() {
+        sendEditRequest(todoId); // Call sendEditRequest function with parameters
+    });
+    modalInstance.show();
+}
+
+function sendEditRequest(todoId){
+    // Call ValidateModal function
+    var validationResult = ValidateModal();
+
+    // Check the result
+    if (typeof validationResult === 'string') {
+        // If validationResult is a string, it means there's an error
+        console.error(validationResult); // Output the error message
+        return;
+    } else {
+        // If validationResult is not a string, it contains the data object
+        var data = validationResult;
+        // Proceed with your AJAX request or any other operation using the 'data' object
+        console.log("Data object for AJAX request:", data);
+    }
+
+    // AJAX request
+    $.ajax({
+        url: '/todos/' + todoId,
+        type: 'PUT', // Use PUT method
+        contentType: 'application/json', 
+        data: JSON.stringify(data), // Convert data to JSON string
+        dataType: 'json', 
+        success: function(response) {
+            // Handle success response
+            console.log('Success:', response);
+            // Find the row corresponding to the todoId
+            var row = $('#row' + todoId);
+
+            // Update the row with the extracted data
+            row.find('td:nth-child(1)').text(data.task);
+            row.find('td:nth-child(2)').text(data.priority);
+
+            // Check if due date is empty
+            if (data.due_date === "") {
+                row.find('td:nth-child(3)').text("None");
+            } else {
+                var formattedDueDate = data.due_date.replace('T', ' ').replace('Z', '');
+                row.find('td:nth-child(3)').text(formattedDueDate);
+            }
+
+            // Set completion status
+            row.find('td:nth-child(4)').text(data.completed ? "Yes" : "No");
+
+            modalInstance.hide();
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error:', error);
+        }
+    });
+}
+
 function addTodoActionListeners() {
     // jQuery code to handle click event on delete button
     $("[id^='deleteTask']").on('click', function() {
@@ -15387,11 +15541,19 @@ function addTodoActionListeners() {
         deleteTodo(todoId);
     });
 
-    // jQuery code to handle click event on delete button
+    // jQuery code to handle click event on edit button
+    $("[id^='editTask']").on('click', function() {
+        // Get the todo ID from the data-todo-id attribute
+        var todoId = $(this).data('todo-id');
+        // Call the editTodo function passing the todo ID
+        editTodo(todoId);
+    });
+
+    // jQuery code to handle click event on markascomplete button
     $("[id^='completeTask']").on('click', function() {
         // Get the todo ID from the data-todo-id attribute
         var todoId = $(this).data('todo-id');
-        // Call the deleteTodo function passing the todo ID
+        // Call the markAsComplete function passing the todo ID
         markAsComplete(todoId);
     });
 }

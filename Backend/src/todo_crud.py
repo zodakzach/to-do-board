@@ -88,7 +88,7 @@ def update_todo(id):
         todo.task = data["task"]
     if "priority" in data:
         todo.priority = data["priority"]
-    if "due_date" in data:
+    if "due_date" in data and data["due_date"] != "":
         due_date_str = data["due_date"]
         if due_date_str:
             try:
@@ -103,11 +103,12 @@ def update_todo(id):
                     ),
                     400,
                 )
-        else:
-            todo.due_date = None
+    else:
+        todo.due_date = None
     if "completed" in data:
         todo.completed = data["completed"]
     # Commit changes to the database
+    db.session.add(todo)
     db.session.commit()
 
     return jsonify({"message": "Todo updated successfully"})

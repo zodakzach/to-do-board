@@ -34,15 +34,13 @@
           placeholder="Search..."
           id="search"
         />
-        <button class="btn btn-outline-secondary align-top" type="button">
-          Search
-        </button>
+        <button class="btn btn-outline-secondary" type="button">Search</button>
       </div>
     </div>
     <div class="col-md-8 d-flex justify-content-end">
       <button
         type="button"
-        class="btn btn-primary fw-semibold"
+        class="btn btn-primary fw-semibold table-container"
         data-bs-toggle="modal"
         data-bs-target="#taskModal"
       >
@@ -75,6 +73,7 @@
                   class="form-control"
                   id="taskDesc"
                   placeholder="Description"
+                  maxlength="255"
                 ></textarea>
                 <p class="invalid-feedback mb-0" id="taskDesc-error"></p>
               </div>
@@ -199,48 +198,97 @@
     </div>
   </div>
 </div>
-<div class="container">
-  <table class="table table-striped table-hover table-bordered">
+<div class="container table-container">
+  <table class="table table-striped table-hover table-bordered mt-3">
     <thead class="text-center">
       <tr>
-        <th>Task</th>
+        <th class="task-fixed-width">Task</th>
         <th>Priority</th>
-        <th>Due Date</th>
+        <th class="date-fixed-width">Due Date</th>
         <th>Completed</th>
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody class="text-center" id="tablebody">
+    <tbody class="text-center table-group-divider" id="tablebody">
       {% for todo in user_todos %}
-      <tr id="row{{todo.id}}">
-        <td>{{ todo.task }}</td>
-        <td>{{ todo.priority }}</td>
+      <tr id="row{{todo.id}}" class="align-middle">
+        <td>
+          <textarea
+            class="form-control col-md-8"
+            id="taskTextArea{{todo.id}}"
+            rows="3"
+            maxlength="255"
+            disabled
+          >
+{{todo.task}}</textarea
+          >
+        </td>
+        {% set priority_class = '' %} {% if todo.priority == 'low' %} {% set
+        priority_class = 'table-primary' %} {% elif todo.priority == 'medium' %}
+        {% set priority_class = 'table-secondary' %} {% elif todo.priority ==
+        'high' %} {% set priority_class = 'table-danger' %} {% endif %}
+        <td class="text-capitalize fw-semibold {{ priority_class }} text-white">
+          {{ todo.priority }}
+        </td>
         <td>{{ todo.due_date }}</td>
         <td>{{ "Yes" if todo.completed else "No" }}</td>
         <td>
           <!-- Add action buttons here -->
           {% if not todo.completed %}
           <button
-            class="btn btn-success btn-sm fw-semibold"
+            class="btn btn-success btn-sm"
             data-todo-id="{{ todo.id }}"
             id="completeTask{{todo.id}}"
           >
-            Mark as Complete
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-check-lg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"
+              />
+            </svg>
           </button>
           <button
-            class="btn btn-primary btn-sm fw-semibold"
+            class="btn btn-primary btn-sm"
             data-todo-id="{{ todo.id }}"
             id="editTask{{todo.id}}"
           >
-            Edit
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pen"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
+              />
+            </svg>
           </button>
           {% endif %}
           <button
-            class="btn btn-danger btn-sm fw-semibold"
+            class="btn btn-danger btn-sm"
             data-todo-id="{{ todo.id }}"
             id="deleteTask{{todo.id}}"
           >
-            Delete
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-x-lg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+              />
+            </svg>
           </button>
         </td>
       </tr>

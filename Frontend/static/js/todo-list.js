@@ -206,24 +206,48 @@ function addTodo(todo) {
         // Remove 'T' and 'Z' from the date string
         formattedDueDate = todo.due_date.replace('T', ' ').replace('Z', '');
     }
+
+    var priorityClass = '';
+    if (todo.priority === 'low') {
+        priorityClass = 'table-primary';
+    } else if (todo.priority === 'medium') {
+        priorityClass = 'table-secondary';
+    } else if (todo.priority === 'high') {
+        priorityClass = 'table-danger';
+    }
     
     // Populate the new row with todo data
     newRow.innerHTML = `
-        <td>${todo.task}</td>
-        <td>${todo.priority}</td>
+        <td>  
+            <textarea class="form-control" id="taskTextArea${todo.id}" rows="3" maxlength="255" disabled>${todo.task}</textarea>
+        </td>
+        <td class="text-capitalize fw-semibold text-white ${priorityClass}">${todo.priority}</td>
         <td>${formattedDueDate}</td>
         <td>${todo.completed ? "Yes" : "No"}</td>
         <td>
         ${!todo.completed ? `
-            <button class="btn btn-success btn-sm fw-semibold" data-todo-id="${todo.id}" id="completeTask${todo.id}">Mark as Complete</button>
-            <button class="btn btn-primary btn-sm fw-semibold" data-todo-id="${todo.id}" id="editTask${todo.id}">Edit</button>
+            <button class="btn btn-success btn-sm" data-todo-id="${todo.id}" id="completeTask${todo.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                </svg>
+            </button>
+            <button class="btn btn-primary btn-sm " data-todo-id="${todo.id}" id="editTask${todo.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                </svg>
+            </button>
         ` : ''}
-        <button class="btn btn-danger btn-sm fw-semibold" data-todo-id="${todo.id}" id="deleteTask${todo.id}">Delete</button>
+        <button class="btn btn-danger btn-sm" data-todo-id="${todo.id}" id="deleteTask${todo.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            </svg>
+        </button>
         </td>
     `;
 
     // Set the ID of the new row to 'row' + todo ID
     newRow.id = 'row' + todo.id;
+    newRow.className = 'align-middle';
 
     // Append the new row to the table body
     tableBody.appendChild(newRow);
@@ -372,8 +396,30 @@ function sendEditRequest(todoId){
             var row = $('#row' + todoId);
 
             // Update the row with the extracted data
-            row.find('td:nth-child(1)').text(data.task);
+            $('#taskTextArea' + todoId).val(data.task);
+
+            var priorityClass = '';
+            if (data.priority === 'low') {
+                priorityClass = 'table-primary';
+            } else if (data.priority === 'medium') {
+                priorityClass = 'table-secondary';
+            } else if (data.priority === 'high') {
+                priorityClass = 'table-danger';
+            }
+
+            row.find('td:nth-child(2)').removeClass(function(index, className) {
+                // Split the classNames by space
+                var classNames = className.split(' ');
+                // Filter out classNames that start with "table-"
+                var filteredClassNames = classNames.filter(function(name) {
+                    return name.startsWith('table-');
+                });
+                // Return the filtered class names joined by space
+                return filteredClassNames.join(' ');
+            }).addClass(priorityClass);
+
             row.find('td:nth-child(2)').text(data.priority);
+            row.find('td:nth-child(2)').addClass(priorityClass);
 
             // Check if due date is empty
             if (data.due_date === "") {

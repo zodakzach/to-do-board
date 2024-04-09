@@ -2,8 +2,20 @@
 $enable-gradients: true;
 $enable-shadows: true;
 
+$blue: #0360c4; // Blue color
+$yellow: #dea703; // Yellow color
+$red: #c41729; // Red color
+
+// Define your custom table variants map
+$table-variants: (
+  "primary":    $blue,
+  "secondary":  $yellow, // Replace $yellow with your preferred yellow color
+  "danger":     $red,
+);
+
 // Include functions first
 @import "bootstrap/scss/functions";
+
 
 // Required
 @import "bootstrap/scss/variables";
@@ -103,4 +115,25 @@ $enable-shadows: true;
         transform: scale(1.05); // Scale up slightly on hover
         box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); // Increase shadow intensity on hover
     }
+}
+
+// SCSS code
+.table-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2); // Slight border
+    background-color: rgba(255, 255, 255, 0.1); // Slight background color
+
+    // Frosted Glass effect
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); // Soft shadow
+
+}
+
+.date-fixed-width {
+    width: 200px; /* Set the desired fixed width */
+  }
+
+.task-fixed-width {
+width: 500px; /* Set the desired fixed width */
 }

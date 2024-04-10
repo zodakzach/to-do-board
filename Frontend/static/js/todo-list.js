@@ -203,8 +203,22 @@ function addTodo(todo) {
     var formattedDueDate = 'None'
 
     if (todo.due_date) {
-        // Remove 'T' and 'Z' from the date string
-        formattedDueDate = todo.due_date.replace('T', ' ').replace('Z', '');
+        var dateComponents = todo.due_date.split(/[-T:Z]/);
+        var year = parseInt(dateComponents[0]);
+        var month = parseInt(dateComponents[1]) - 1; // Month is 0-indexed
+        var day = parseInt(dateComponents[2]);
+        var hour = parseInt(dateComponents[3]);
+        var minute = parseInt(dateComponents[4]);
+        var second = parseInt(dateComponents[5]);
+        
+        var date = new Date(year, month, day, hour, minute, second);
+        var options = { month: 'long', day: 'numeric', year: 'numeric' };
+        var formattedDate = date.toLocaleDateString('en-US', options);
+        
+        var timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        var formattedTime = date.toLocaleTimeString('en-US', timeOptions);
+    
+        formattedDueDate = formattedDate + '<br>' + formattedTime;
     }
 
     var priorityClass = '';
@@ -219,10 +233,13 @@ function addTodo(todo) {
     // Populate the new row with todo data
     newRow.innerHTML = `
         <td>  
-            <textarea class="form-control" id="taskTextArea${todo.id}" rows="3" maxlength="255" disabled>${todo.task}</textarea>
+            <textarea class="form-control" id="taskTextArea${todo.id}" rows="2" maxlength="255" disabled>${todo.task}</textarea>
         </td>
         <td class="text-capitalize fw-semibold text-white ${priorityClass}">${todo.priority}</td>
-        <td>${formattedDueDate}</td>
+        <td>
+            ${formattedDueDate.split('<br>')[0]}<br>
+            ${formattedDueDate.split('<br>')[1]}
+        </td>
         <td>${todo.completed ? "Yes" : "No"}</td>
         <td>
         ${!todo.completed ? `
@@ -320,34 +337,32 @@ function editTodo(todoId) {
     $('#taskDueDateSwitch').prop('checked', dueDateSwitch);
 
     if (dueDateSwitch) {
-        // Split the dueDate string into date and time components
-        var dueDateParts = dueDate.split(' ');
-        var date = dueDateParts[0]; // Extract date part
+        // Split the date string into date and time components
+        var dateComponents = dueDate.split('\n');
+        var timePart = dateComponents[1];// Extract time and AM/PM part
 
-        var time = ''; // Initialize time variable
+        // Parse the date string to get the date object
+        var dateObj = new Date(dueDate);
 
-        // If dueDateParts has a second element (i.e., time part is present)
-        if (dueDateParts.length > 1) {
-            time = dueDateParts[1]; // Extract time part
-        }
+        // Extract individual date components
+        // Extract individual date components
+        var year = dateObj.getFullYear();
+        var month = ('0' + (dateObj.getMonth() + 1)).slice(-2); // Month is 0-indexed, so add 1 and pad with leading zeros
+        var day = ('0' + dateObj.getDate()).slice(-2); // Pad with leading zeros
 
-        // If time is not empty, extract hour and minute
-        var hour = '';
-        var min = '';
-        if (time !== '') {
-            hour = time.split(':')[0]; // Extract hour from time
-            min = time.split(':')[1]; // Extract minute from time
-        }
+        // Trim leading and trailing spaces from the time string
+        var timeString = timePart.trim();
 
-        // Determine AM/PM based on hour
-        var ampm = hour >= 12 ? 'PM' : 'AM';
+        // Split the time string into components
+        var timeComponents = timeString.split(/:| /); // Split by colon or spac
+        var hours = parseInt(timeComponents[0]).toString();
+        var minutes = parseInt(timeComponents[1]).toString();
+        minutes = minutes.length === 1 ? '0' + minutes : minutes;
+        var ampm = timeComponents[3];
 
-        // Adjust hour to 12-hour format
-        hour = hour % 12 || 12;
-
-        $('#taskDatePicker').val(date); // Set date input value
-        $('#taskHourSel').val(hour); // Set hour input value
-        $('#taskMinSel').val(min); // Set minute input value
+        $('#taskDatePicker').val(year + "-" + month + "-" + day); // Set date input value
+        $('#taskHourSel').val(hours); // Set hour input value
+        $('#taskMinSel').val(minutes); // Set minute input value
         $('#taskAmPmSel').val(ampm); // Set AM/PM input value
 
         collapseInstance = Collapse.getOrCreateInstance(document.getElementById('collapseDueDate'));

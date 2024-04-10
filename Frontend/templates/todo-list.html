@@ -20,7 +20,7 @@
     </ul>
   </div>
 </nav>
-<h1 class="mt-5 fw-bold text-center">
+<h1 class="mt-5 fw-bold text-center small-gradient-text">
   {{ current_user.username | title }}'s To-Do Board
 </h1>
 <div class="container mt-5 mb-4 me-auto">
@@ -220,7 +220,7 @@
           <textarea
             class="form-control col-md-8"
             id="taskTextArea{{todo.id}}"
-            rows="3"
+            rows="2"
             maxlength="255"
             disabled
           >
@@ -234,7 +234,14 @@
         <td class="text-capitalize fw-semibold {{ priority_class }} text-white">
           {{ todo.priority }}
         </td>
-        <td>{{ todo.due_date }}</td>
+        {% if todo.due_date %}
+          <td>
+            {{ todo.due_date.strftime('%B %d, %Y') }}<br>
+            {{ todo.due_date.strftime('%I:%M:%S %p') }}
+          </td>     
+        {% else %}
+          <td>None</td>
+        {% endif %}
         <td>{{ "Yes" if todo.completed else "No" }}</td>
         <td>
           <!-- Add action buttons here -->

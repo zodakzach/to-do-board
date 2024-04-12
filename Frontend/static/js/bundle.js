@@ -15366,11 +15366,32 @@ function addTodo(todo) {
     } else if (todo.priority === 'high') {
         priorityClass = 'table-danger';
     }
-    
+
+    var newBtn;
+
+    if (todo.status === 'Paused' || todo.status === 'Not Started'){
+        // Create the button element
+        newBtn = $('<button class="btn btn-secondary btn-sm" data-todo-id="' + todo.id + '" id="startTask' + todo.id + '">\
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-btn" viewBox="0 0 16 16">\
+                                <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>\
+                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>\
+                            </svg>\
+                        </button>');
+    }else {
+        newBtn = $('<button class="btn btn-secondary btn-sm" data-todo-id="' + todo.id + '" id="pauseTask' + todo.id + '">\
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-btn" viewBox="0 0 16 16">\
+                                <path d="M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5"/><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>\
+                            </svg>\
+                        </button>');
+    }
+
+    console.log(newBtn);
+
+
     // Populate the new row with todo data
     newRow.innerHTML = `
         <td>  
-            <textarea class="form-control" id="taskTextArea${todo.id}" rows="2" maxlength="255" disabled>${todo.task}</textarea>
+            <textarea class="form-control" id="taskTextArea${todo.id}" rows="2" maxlength="255" readonly>${todo.task}</textarea>
         </td>
         <td class="text-capitalize fw-semibold text-white ${priorityClass}">${todo.priority}</td>
         <td>
@@ -15386,7 +15407,8 @@ function addTodo(todo) {
                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
                 </svg>
             </button>
-        ` : ''}
+            ${newBtn.prop('outerHTML')}
+        `: ''}
         <button class="btn btn-primary btn-sm " data-todo-id="${todo.id}" id="editTask${todo.id}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
                 <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
@@ -15456,13 +15478,7 @@ function markAsComplete(todoId) {
             console.log('Todo marked as complete:', response.message);
 
             // Update the row to reflect the completed status
-            $('#statusBadge' + todoId)
-            .removeClass('bg-secondary bg-primary bg-danger') // Remove other background color classes
-            .addClass('bg-success') // Add bg-success class
-            .text('Completed'); // Change text content to "Completed"
-
-            // Remove the "Mark as Complete" button
-            $('#completeTask' + todoId).hide();
+            editTodo(todoId, { status: 'Completed' });
         },
         error: function(xhr, status, error) {
             // Handle error response
@@ -15471,21 +15487,21 @@ function markAsComplete(todoId) {
     });
 }
 
-function editTodo(todoId) {
+function showEditModal(todoId) {
     // Find the row corresponding to the todoId
     var row = $('#row' + todoId);
 
     // Extract task data from the row
-    var taskDescription = row.find('td:nth-child(1)').text().trim();
+    var taskDescription = $('#taskTextArea' + todoId).val();
     var priority = row.find('td:nth-child(2)').text().trim();
     var formattedDueDateText = row.find('td:nth-child(3)').html().replace(/<br\s*\/?>/g, '\n');
-    console.log(formattedDueDateText);
     var status = $('#statusBadge' + todoId).text().trim();
 
     // Update modal title to "Edit Task"
     $('#taskModalLabel').text('Edit Task');
 
     // Populate modal fields with existing task data
+    console.log(taskDescription);
     $('#taskDesc').val(taskDescription);
     $('#taskStatusSel').val(status);
     $('#taskPrioritySel').val(priority);
@@ -15569,84 +15585,7 @@ function sendEditRequest(todoId){
         success: function(response) {
             // Handle success response
             console.log('Success:', response);
-            // Find the row corresponding to the todoId
-            var row = $('#row' + todoId);
-
-            // Update the row with the extracted data
-            $('#taskTextArea' + todoId).val(data.task);
-
-            var priorityClass = '';
-            if (data.priority === 'low') {
-                priorityClass = 'table-primary';
-            } else if (data.priority === 'medium') {
-                priorityClass = 'table-secondary';
-            } else if (data.priority === 'high') {
-                priorityClass = 'table-danger';
-            }
-
-            row.find('td:nth-child(2)').removeClass(function(index, className) {
-                // Split the classNames by space
-                var classNames = className.split(' ');
-                // Filter out classNames that start with "table-"
-                var filteredClassNames = classNames.filter(function(name) {
-                    return name.startsWith('table-');
-                });
-                // Return the filtered class names joined by space
-                return filteredClassNames.join(' ');
-            }).addClass(priorityClass);
-
-            row.find('td:nth-child(2)').text(data.priority);
-            row.find('td:nth-child(2)').addClass(priorityClass);
-
-            if (data.due_date != "") {
-                var dateComponents = data.due_date.split(/[-T:Z]/);
-                var year = parseInt(dateComponents[0]);
-                var month = parseInt(dateComponents[1]) - 1; // Month is 0-indexed
-                var day = parseInt(dateComponents[2]);
-                var hour = parseInt(dateComponents[3]);
-                var minute = parseInt(dateComponents[4]);
-                var second = parseInt(dateComponents[5]);
-                
-                var date = new Date(year, month, day, hour, minute, second);
-                var options = { month: 'long', day: 'numeric', year: 'numeric' };
-                var formattedDate = date.toLocaleDateString('en-US', options);
-                
-                var timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                var formattedTime = date.toLocaleTimeString('en-US', timeOptions);
-            
-                var formattedDueDate = formattedDate + '<br>' + formattedTime;
-            }
-
-            // Check if due date is empty
-            if (formattedDueDate) {
-                row.find('td:nth-child(3)').html(formattedDueDate);
-            } else {
-                row.find('td:nth-child(3)').text("None");
-            }
-
-            var statusClass = getStatusColorClass(data.status);
-            // Set status
-            $('#statusBadge' + todoId)
-            .removeClass('bg-secondary bg-primary bg-danger bg-success') // Remove background color classes
-            .addClass(statusClass)
-            .text(data.status);
-
-            var buttonId = '#completeTask' + todoId;
-            var buttonExists = $(buttonId).length > 0;
-            
-            if (data.status === 'Completed') {
-                // Remove the button if it exists and the status is 'Completed'
-                if (buttonExists) {
-                    $(buttonId).hide();
-                }
-            } else {
-                // Add the button if it doesn't exist and the status is not 'Completed'
-                if (buttonExists) {
-                    console.log(data.status, buttonExists);
-                    $(buttonId).show();
-                }
-            }
-
+            editTodo(todoId, data);
             modalInstance.hide();
         },
         error: function(xhr, status, error) {
@@ -15654,6 +15593,185 @@ function sendEditRequest(todoId){
             console.error('Error:', error);
         }
     });
+}
+
+function editTodo(todoId, data) {
+    // Find the row corresponding to the todoId
+    var row = $('#row' + todoId);
+
+    // Update the task if it exists in data
+    if (data.hasOwnProperty('task')) {
+        $('#taskTextArea' + todoId).val(data.task);
+    }
+
+    // Update priority if it exists in data
+    if (data.hasOwnProperty('priority')) {
+        var priorityClass = '';
+        if (data.priority === 'low') {
+            priorityClass = 'table-primary';
+        } else if (data.priority === 'medium') {
+            priorityClass = 'table-secondary';
+        } else if (data.priority === 'high') {
+            priorityClass = 'table-danger';
+        }
+
+        row.find('td:nth-child(2)').removeClass(function(index, className) {
+            // Split the classNames by space
+            var classNames = className.split(' ');
+            // Filter out classNames that start with "table-"
+            var filteredClassNames = classNames.filter(function(name) {
+                return name.startsWith('table-');
+            });
+            // Return the filtered class names joined by space
+            return filteredClassNames.join(' ');
+        }).addClass(priorityClass);
+
+        row.find('td:nth-child(2)').text(data.priority);
+        row.find('td:nth-child(2)').addClass(priorityClass);
+    }
+
+    // Update due date if it exists in data
+    if (data.hasOwnProperty('due_date'))
+    {
+        if (data.due_date !== "") {
+            var dateComponents = data.due_date.split(/[-T:Z]/);
+            var year = parseInt(dateComponents[0]);
+            var month = parseInt(dateComponents[1]) - 1; // Month is 0-indexed
+            var day = parseInt(dateComponents[2]);
+            var hour = parseInt(dateComponents[3]);
+            var minute = parseInt(dateComponents[4]);
+            var second = parseInt(dateComponents[5]);
+            
+            var date = new Date(year, month, day, hour, minute, second);
+            var options = { month: 'long', day: 'numeric', year: 'numeric' };
+            var formattedDate = date.toLocaleDateString('en-US', options);
+            
+            var timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            var formattedTime = date.toLocaleTimeString('en-US', timeOptions);
+    
+            var formattedDueDate = formattedDate + '<br>' + formattedTime;
+            row.find('td:nth-child(3)').html(formattedDueDate);
+        } else {
+            row.find('td:nth-child(3)').text("None");
+        }
+    }
+
+    // Update status if it exists in data
+    if (data.hasOwnProperty('status')) {
+        var statusClass = getStatusColorClass(data.status);
+        $('#statusBadge' + todoId)
+        .removeClass('bg-secondary bg-primary bg-danger bg-success') // Remove background color classes
+        .addClass(statusClass)
+        .text(data.status);
+
+        updateActionButtons(todoId, data, row);
+    }
+
+}
+
+function updateActionButtons(todoId, data, row){
+    // Update action buttons if it exists in data
+    if (data.hasOwnProperty('status')) {
+        var buttonCreated = false;
+        var compBtnId = '#completeTask' + todoId;
+        var pauseBtnId = '#pauseTask' + todoId;
+        var startBtnId = '#startTask' + todoId;
+
+        var compBtnExists = $(compBtnId).length > 0;
+        var pauseBtnExists = $(pauseBtnId).length > 0;
+        var startBtnExists = $(startBtnId).length > 0;
+
+        var targetTd = row.find('td:nth-child(5)'); 
+        var secondChild = targetTd.children().eq(1);
+
+        if (data.status === 'Completed') {
+            // Remove the button if it exists and the status is 'Completed'
+            if (compBtnExists) {
+                $(compBtnId).hide();
+            }
+            if (pauseBtnExists) {
+                $(pauseBtnId).hide();
+            }
+            if (startBtnExists) {
+                $(startBtnId).hide();
+            }
+        } else if (data.status === 'Paused' || data.status === 'Not Started') {
+            if (pauseBtnExists) {
+                $(pauseBtnId).hide();
+            }
+            if (compBtnExists) {
+                $(compBtnId).show();
+            } else {
+                // Create the button element
+                var compBtn = $('<button class="btn btn-success btn-sm" data-todo-id="' + todoId + '" id="completeTask' + todoId + '">\
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">\
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>\
+                                </svg>\
+                                </button>');
+
+                // Append the button to the target td element
+                targetTd.prepend(compBtn);
+                buttonCreated = true;
+                $(compBtnId).show();
+            }
+            if (startBtnExists) {
+                $(startBtnId).show();
+            } else {
+
+                // Create the button element
+                var startBtn = $('<button class="btn btn-secondary btn-sm" data-todo-id="' + todoId + '" id="startTask' + todoId + '">\
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-btn" viewBox="0 0 16 16">\
+                                        <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>\
+                                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>\
+                                    </svg>\
+                                </button>');
+
+                // Append the button to the target td element
+                startBtn.insertBefore(secondChild);
+                buttonCreated = true;
+                $(startBtnId).show();
+            }
+        } else {
+            if (startBtnExists) {
+                $(startBtnId).hide();
+            }
+            if (compBtnExists) {
+                $(compBtnId).show();
+            } else {
+                // Create the button element
+                var compBtn = $('<button class="btn btn-success btn-sm" data-todo-id="' + todoId + '" id="completeTask' + todoId + '">\
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">\
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>\
+                                </svg>\
+                                </button>');
+
+                // Append the button to the target td element
+                targetTd.prepend(compBtn);
+                buttonCreated = true;
+                $(compBtnId).show();
+            }
+
+            if (pauseBtnExists) {
+                $(pauseBtnId).show();
+            } else {
+                // Create the button element
+                var pauseBtn = $('<button class="btn btn-secondary btn-sm" data-todo-id="' + todoId + '" id="pauseTask' + todoId + '">\
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-btn" viewBox="0 0 16 16">\
+                                        <path d="M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5"/><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>\
+                                    </svg>\
+                                </button>');
+
+                // Append the button to the target td element
+                // Insert the startBtm before the second child
+                pauseBtn.insertBefore(secondChild);
+                buttonCreated = true;
+                $(pauseBtnId).show();
+            }
+        }
+        if (buttonCreated){
+            addTodoActionListeners();
+        }
+    }
 }
 
 function addTodoActionListeners() {
@@ -15669,8 +15787,8 @@ function addTodoActionListeners() {
     $("[id^='editTask']").on('click', function() {
         // Get the todo ID from the data-todo-id attribute
         var todoId = $(this).data('todo-id');
-        // Call the editTodo function passing the todo ID
-        editTodo(todoId);
+        // Call the showEditModal function passing the todo ID
+        showEditModal(todoId);
     });
 
     // jQuery code to handle click event on markascomplete button
@@ -15679,5 +15797,57 @@ function addTodoActionListeners() {
         var todoId = $(this).data('todo-id');
         // Call the markAsComplete function passing the todo ID
         markAsComplete(todoId);
+    });
+
+    $("[id^='startTask']").on('click', function() {
+        // Get the todo ID from the data-todo-id attribute
+        var todoId = $(this).data('todo-id');
+        startTask(todoId);
+    });
+
+    $("[id^='pauseTask']").on('click', function() {
+        // Get the todo ID from the data-todo-id attribute
+        var todoId = $(this).data('todo-id');
+        pauseTask(todoId);
+    });
+}
+
+function startTask(todoId){
+    // AJAX request
+    $.ajax({
+        url: '/todos/' + todoId,
+        type: 'PUT', // Use PUT method
+        contentType: 'application/json', 
+        data: JSON.stringify({ status: "In Progress" }), // Convert data to JSON string with only 'status' property
+        dataType: 'json', 
+        success: function(response) {
+            // Handle success response
+            console.log('Success:', response);
+            editTodo(todoId,{ status: "In Progress" });
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error:', error);
+        }
+    });
+}
+
+function pauseTask(todoId){
+    // AJAX request
+    $.ajax({
+        url: '/todos/' + todoId,
+        type: 'PUT', // Use PUT method
+        contentType: 'application/json', 
+        data: JSON.stringify({ status: "Paused" }), // Convert data to JSON string with only 'status' property
+        dataType: 'json', 
+        success: function(response) {
+            // Handle success response
+            console.log('Success:', response);
+            editTodo(todoId,{ status: "Paused" });
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error:', error);
+        }
     });
 }

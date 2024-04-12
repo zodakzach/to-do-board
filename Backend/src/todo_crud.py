@@ -111,6 +111,8 @@ def update_todo(id):
                     ),
                     400,
                 )
+    elif "due_date" in data and data["due_date"] == "":
+        todo.due_date = None
     if "status" in data:
         todo.status = data["status"]
     # Commit changes to the database

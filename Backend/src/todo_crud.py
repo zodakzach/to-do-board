@@ -16,7 +16,7 @@ def create_todo():
     task = data.get("task")
     priority = data.get("priority")
     due_date_str = data.get("due_date")
-    completed = data.get("completed", False)  # Default value for completed
+    status = data.get("status")
 
     # Validating the required fields
     if not task or not priority:
@@ -27,28 +27,36 @@ def create_todo():
     else:
         due_date = None
 
-    # Creating a new todo object
-    new_todo = Todo(
-        user_id=current_user.id,  # Assuming user is logged in
-        task=task,
-        priority=priority,
-        due_date=due_date,
-        completed=completed,
-    )
+    try:
+        # Creating a new todo object
+        new_todo = Todo(
+            user_id=current_user.id,  # Assuming user is logged in
+            task=task,
+            priority=priority,
+            due_date=due_date,
+            status=status,
+        )
 
-    # Adding the new todo to the session and committing changes
-    db.session.add(new_todo)
-    db.session.commit()
+        # Adding the new todo to the session and committing changes
+        db.session.add(new_todo)
+        db.session.commit()
 
-    serialized_todo = new_todo.serialize()
+        serialized_todo = new_todo.serialize()
 
-    # Remove the user_id from the serialized data
-    serialized_todo.pop("user_id", None)
+        # Remove the user_id from the serialized data
+        serialized_todo.pop("user_id", None)
 
-    # Combine the success message and serialized todo into a single dictionary
-    response_data = {"message": "Todo created successfully", "todo": serialized_todo}
+        # Combine the success message and serialized todo into a single dictionary
+        response_data = {
+            "message": "Todo created successfully",
+            "todo": serialized_todo,
+        }
 
-    return jsonify(response_data), 201
+        return jsonify(response_data), 201
+    except ValueError:
+        # Handle the case where priority or status values are not valid enums
+        error_message = {"error": "Invalid priority or status value provided"}
+        return jsonify(error_message), 400
 
 
 @todo_routes.route("/todos", methods=["GET"])
@@ -103,10 +111,8 @@ def update_todo(id):
                     ),
                     400,
                 )
-    else:
-        todo.due_date = None
-    if "completed" in data:
-        todo.completed = data["completed"]
+    if "status" in data:
+        todo.status = data["status"]
     # Commit changes to the database
     db.session.add(todo)
     db.session.commit()

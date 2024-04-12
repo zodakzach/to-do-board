@@ -72,7 +72,7 @@ class TodoCRUDTestCase(TestCase):
                     "task": "Test Task",
                     "priority": "high",
                     "due_date": "2024-04-01T00:00:00Z",  # Example due date
-                    "completed": False,
+                    "status": "Completed",
                 },
             )
             self.assertEqual(response.status_code, 201)
@@ -106,7 +106,7 @@ class TodoCRUDTestCase(TestCase):
                     task="Test Task",
                     priority="high",
                     due_date=datetime(2024, 4, 1, 0, 0),
-                    completed=False,
+                    status="Completed",
                 )
             )
             db.session.commit()
@@ -126,7 +126,7 @@ class TodoCRUDTestCase(TestCase):
                     task="Test Task",
                     priority="high",
                     due_date=datetime(2024, 4, 1, 0, 0),
-                    completed=False,
+                    status="Completed",
                 )
             )
             db.session.commit()
@@ -151,7 +151,7 @@ class TodoCRUDTestCase(TestCase):
                     task="Test Task",
                     priority="high",
                     due_date=datetime(2024, 4, 1, 0, 0),
-                    completed=False,
+                    status="Completed",
                 )
             )
             db.session.commit()
@@ -164,7 +164,7 @@ class TodoCRUDTestCase(TestCase):
                     "task": "Updated Task",
                     "priority": "medium",
                     "due_date": "2024-04-15T00:00:00Z",  # Example updated due date
-                    "completed": True,
+                    "status": "Completed",
                 },
             )
             self.assertEqual(response.status_code, 200)
@@ -191,7 +191,7 @@ class TodoCRUDTestCase(TestCase):
                     task="Test Task",
                     priority="high",
                     due_date=datetime(2024, 4, 1, 0, 0),
-                    completed=False,
+                    status="Completed",
                 )
             )
             db.session.commit()

@@ -42,7 +42,7 @@ $table-variants: (
 // @import "bootstrap/scss/breadcrumb";
 // @import "bootstrap/scss/accordion";
 // @import "bootstrap/scss/pagination";
-// @import "bootstrap/scss/badge";
+@import "bootstrap/scss/badge";
 // @import "bootstrap/scss/alert";
 // @import "bootstrap/scss/progress";
 // @import "bootstrap/scss/list-group";
@@ -134,6 +134,10 @@ $table-variants: (
     width: 175px; /* Set the desired fixed width */
   }
 
-.task-fixed-width {
-width: 500px; /* Set the desired fixed width */
+.priority-fixed-width {
+width: 150px; /* Set the desired fixed width */
 }
+
+.actions-fixed-width {
+  width: 225px; /* Set the desired fixed width */
+  }

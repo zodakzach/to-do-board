@@ -15224,7 +15224,7 @@ function addTask(){
 
 function ValidateModal(){
     var taskDescription = $('#taskDesc').val();
-    var completed = $('#taskCompCheck').prop('checked');
+    var status = $('#taskStatusSel').val();
     var priority = $('#taskPrioritySel').val();
     var dueDateSwitch = $('#taskDueDateSwitch').prop('checked');
 
@@ -15284,7 +15284,7 @@ function ValidateModal(){
         // Prepare data object for AJAX request
         var data = {
             task: taskDescription,
-            completed: completed,
+            status: status,
             priority: priority,
             due_date: dueDate
         };
@@ -15301,7 +15301,7 @@ function resetModal() {
     $('#taskDesc-error').addClass('d-none');
     $('#taskDesc').removeClass('is-invalid');
 
-    $('#taskCompCheck').prop('checked', false);
+    $('#taskStatusSel').val('Not Started');
     
     $('#taskPrioritySel').val('Select a Priority');
     $('#taskPrioritySel-error').addClass('d-none');
@@ -15374,23 +15374,24 @@ function addTodo(todo) {
         </td>
         <td class="text-capitalize fw-semibold text-white ${priorityClass}">${todo.priority}</td>
         <td>
-            ${formattedDueDate.split('<br>')[0]}<br>
-            ${formattedDueDate.split('<br>')[1]}
+        ${formattedDueDate === "None" ? "None" : formattedDueDate}
         </td>
-        <td>${todo.completed ? "Yes" : "No"}</td>
         <td>
-        ${!todo.completed ? `
+            <span id="statusBadge${todo.id}" class="badge rounded-pill ${getStatusColorClass(todo.status)}">${todo.status}</span>
+        </td>
+        <td>
+        ${todo.status != 'Completed' ?`
             <button class="btn btn-success btn-sm" data-todo-id="${todo.id}" id="completeTask${todo.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
                 </svg>
             </button>
-            <button class="btn btn-primary btn-sm " data-todo-id="${todo.id}" id="editTask${todo.id}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-                </svg>
-            </button>
         ` : ''}
+        <button class="btn btn-primary btn-sm " data-todo-id="${todo.id}" id="editTask${todo.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+            </svg>
+        </button>
         <button class="btn btn-danger btn-sm" data-todo-id="${todo.id}" id="deleteTask${todo.id}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -15407,6 +15408,22 @@ function addTodo(todo) {
     tableBody.appendChild(newRow);
 
     addTodoActionListeners();
+}
+
+// Function to get the Bootstrap color class based on the status value
+function getStatusColorClass(status) {
+    switch (status) {
+        case 'Not Started':
+            return 'bg-secondary';
+        case 'In Progress':
+            return 'bg-primary';
+        case 'Completed':
+            return 'bg-success';
+        case 'Paused':
+            return 'bg-danger';
+        default:
+            return ''; // Default class if status doesn't match any case
+    }
 }
 
 function deleteTodo(todoId) {
@@ -15433,15 +15450,19 @@ function markAsComplete(todoId) {
         type: 'PUT',
         url: '/todos/' + todoId,
         contentType: 'application/json',
-        data: JSON.stringify({ completed: true }), // Mark the todo as completed
+        data: JSON.stringify({ status: 'Completed' }), // Mark the todo as completed
         success: function(response) {
             // Handle success response
             console.log('Todo marked as complete:', response.message);
+
             // Update the row to reflect the completed status
-            $('#row' + todoId + ' td:nth-child(4)').text('Yes'); // Update status column to "Yes"
-            // Remove the "Mark as Complete" and "Edit" buttons
-            $('#completeTask' + todoId).remove();
-            $('#editTask' + todoId).remove();
+            $('#statusBadge' + todoId)
+            .removeClass('bg-secondary bg-primary bg-danger') // Remove other background color classes
+            .addClass('bg-success') // Add bg-success class
+            .text('Completed'); // Change text content to "Completed"
+
+            // Remove the "Mark as Complete" button
+            $('#completeTask' + todoId).hide();
         },
         error: function(xhr, status, error) {
             // Handle error response
@@ -15457,29 +15478,33 @@ function editTodo(todoId) {
     // Extract task data from the row
     var taskDescription = row.find('td:nth-child(1)').text().trim();
     var priority = row.find('td:nth-child(2)').text().trim();
-    var dueDate = row.find('td:nth-child(3)').text().trim();
-    var completed = row.find('td:nth-child(4)').text().trim() === "Yes";
+    var formattedDueDateText = row.find('td:nth-child(3)').html().replace(/<br\s*\/?>/g, '\n');
+    console.log(formattedDueDateText);
+    var status = $('#statusBadge' + todoId).text().trim();
 
     // Update modal title to "Edit Task"
     $('#taskModalLabel').text('Edit Task');
 
     // Populate modal fields with existing task data
     $('#taskDesc').val(taskDescription);
-    $('#taskCompCheck').prop('checked', completed);
+    $('#taskStatusSel').val(status);
     $('#taskPrioritySel').val(priority);
     $('#taskBtn').text('Save Task');
 
     // Set due date switch based on the presence of due date
-    var dueDateSwitch = dueDate !== 'None';
+    var dueDateSwitch = formattedDueDateText.trim() !== 'None';
     $('#taskDueDateSwitch').prop('checked', dueDateSwitch);
 
     if (dueDateSwitch) {
         // Split the date string into date and time components
-        var dateComponents = dueDate.split('\n');
-        var timePart = dateComponents[1];// Extract time and AM/PM part
+        var parts = formattedDueDateText.split('\n').filter(Boolean);
+
+        // Extract date and time parts using string slicing
+        var dateStr = parts[0].trim();  // Include the comma and the following space
+        var timeStr = parts[1].trim(); 
 
         // Parse the date string to get the date object
-        var dateObj = new Date(dueDate);
+        var dateObj = new Date(dateStr);
 
         // Extract individual date components
         // Extract individual date components
@@ -15488,7 +15513,7 @@ function editTodo(todoId) {
         var day = ('0' + dateObj.getDate()).slice(-2); // Pad with leading zeros
 
         // Trim leading and trailing spaces from the time string
-        var timeString = timePart.trim();
+        var timeString = timeStr.trim();
 
         // Split the time string into components
         var timeComponents = timeString.split(/:| /); // Split by colon or spac
@@ -15573,16 +15598,54 @@ function sendEditRequest(todoId){
             row.find('td:nth-child(2)').text(data.priority);
             row.find('td:nth-child(2)').addClass(priorityClass);
 
-            // Check if due date is empty
-            if (data.due_date === "") {
-                row.find('td:nth-child(3)').text("None");
-            } else {
-                var formattedDueDate = data.due_date.replace('T', ' ').replace('Z', '');
-                row.find('td:nth-child(3)').text(formattedDueDate);
+            if (data.due_date != "") {
+                var dateComponents = data.due_date.split(/[-T:Z]/);
+                var year = parseInt(dateComponents[0]);
+                var month = parseInt(dateComponents[1]) - 1; // Month is 0-indexed
+                var day = parseInt(dateComponents[2]);
+                var hour = parseInt(dateComponents[3]);
+                var minute = parseInt(dateComponents[4]);
+                var second = parseInt(dateComponents[5]);
+                
+                var date = new Date(year, month, day, hour, minute, second);
+                var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                var formattedDate = date.toLocaleDateString('en-US', options);
+                
+                var timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                var formattedTime = date.toLocaleTimeString('en-US', timeOptions);
+            
+                var formattedDueDate = formattedDate + '<br>' + formattedTime;
             }
 
-            // Set completion status
-            row.find('td:nth-child(4)').text(data.completed ? "Yes" : "No");
+            // Check if due date is empty
+            if (formattedDueDate) {
+                row.find('td:nth-child(3)').html(formattedDueDate);
+            } else {
+                row.find('td:nth-child(3)').text("None");
+            }
+
+            var statusClass = getStatusColorClass(data.status);
+            // Set status
+            $('#statusBadge' + todoId)
+            .removeClass('bg-secondary bg-primary bg-danger bg-success') // Remove background color classes
+            .addClass(statusClass)
+            .text(data.status);
+
+            var buttonId = '#completeTask' + todoId;
+            var buttonExists = $(buttonId).length > 0;
+            
+            if (data.status === 'Completed') {
+                // Remove the button if it exists and the status is 'Completed'
+                if (buttonExists) {
+                    $(buttonId).hide();
+                }
+            } else {
+                // Add the button if it doesn't exist and the status is not 'Completed'
+                if (buttonExists) {
+                    console.log(data.status, buttonExists);
+                    $(buttonId).show();
+                }
+            }
 
             modalInstance.hide();
         },

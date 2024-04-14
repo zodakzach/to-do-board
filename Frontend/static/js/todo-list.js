@@ -49,6 +49,35 @@ $(function(){
     });
 
     addTodoActionListeners();
+
+
+
+    if (searchBar){
+        // Event listener for the search bar
+        searchBar.addEventListener('keyup', function() {
+            // Get the search query entered by the user
+            var searchString = searchBar.value.trim().toLowerCase();
+        
+            var filteredTodos;
+        
+            getAllUserTodos()
+                .done(function(response) {
+                    // Filter user todos based on the search query
+                    filteredTodos = filterUserTodos(response, searchString);
+                    clearTasks();
+        
+                    if (filterUserTodos.length > 0){
+                        filteredTodos.forEach(function(task) {
+                            addTodo(task);
+                        });
+                    }
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                });
+        
+        });
+    }
 });
 
 function addTask(){
@@ -729,33 +758,6 @@ function filterUserTodos(userTodos, searchString) {
         return todo.task.toLowerCase().includes(searchString.toLowerCase());
     });
 }
-
-// Event listener for the search bar
-searchBar.addEventListener('keyup', function() {
-    // Get the search query entered by the user
-    var searchString = searchBar.value.trim().toLowerCase();
-
-    var filteredTodos;
-
-    getAllUserTodos()
-        .done(function(response) {
-            // Filter user todos based on the search query
-            filteredTodos = filterUserTodos(response, searchString);
-            clearTasks();
-
-            if (filterUserTodos.length > 0){
-                filteredTodos.forEach(function(task) {
-                    addTodo(task);
-                });
-            }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Error:', textStatus, errorThrown);
-        });
-
-    console.log(filteredTodos);
-});
-
 
 function clearTasks() {
     // Get all the rows in the table body

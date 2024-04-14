@@ -65,6 +65,13 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/settings")
+@login_required
+def settings():
+    # Render the index.html template
+    return render_template("settings.html")
+
+
 @app.route("/todo-list")
 @login_required
 def todo_list():

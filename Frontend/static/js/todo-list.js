@@ -10,6 +10,7 @@ var taskDueDateCollapsed = true;
 // Declare global variables
 var modalInstance;
 var collapseInstance;
+var searchBar = document.getElementById('search');
 
 
 // Initialize datepicker
@@ -715,3 +716,52 @@ function pauseTask(todoId){
     });
 }
 
+function getAllUserTodos() {
+    return $.ajax({
+        url: '/todos',
+        method: 'GET',
+        dataType: 'json'
+    });
+}
+
+function filterUserTodos(userTodos, searchString) {
+    return userTodos.filter(function(todo) {
+        return todo.task.toLowerCase().includes(searchString.toLowerCase());
+    });
+}
+
+// Event listener for the search bar
+searchBar.addEventListener('keyup', function() {
+    // Get the search query entered by the user
+    var searchString = searchBar.value.trim().toLowerCase();
+    getAllUserTodos()
+        .done(function(response) {
+            // Filter user todos based on the search query
+            var filteredTodos = filterUserTodos(response, searchString);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+        });
+});
+
+/**
+ * Function to get all todos from the server
+ * then add them to the table
+ */
+function readdTodos() {
+    $.ajax({
+        type: 'GET', // Use GET method
+        url: '/todos',
+        success: function(response) {
+            // Handle success response
+            console.log('Todos:', response.todos);
+            response.todos.forEach(todo => {
+                addTodo(todo);
+            });
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Error getting todos:', error);
+        }
+    });
+}

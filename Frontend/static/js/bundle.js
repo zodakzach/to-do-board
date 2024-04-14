@@ -15147,6 +15147,7 @@ var taskDueDateCollapsed = true;
 // Declare global variables
 var modalInstance;
 var collapseInstance;
+var searchBar = document.getElementById('search');
 
 
 // Initialize datepicker
@@ -15850,4 +15851,50 @@ function pauseTask(todoId){
             console.error('Error:', error);
         }
     });
+}
+
+
+searchBar.addEventListener('keyup', function(e) {
+    var searchString = e.target.value.toLowerCase();
+
+    // Call the searchTasksByName function to filter tasks based on the search string
+    var filteredTaskNames = searchTasksByName(searchString);
+
+    /*
+    * Clear all the current tasks from the UI 
+    * and add only the filtered tasks
+    */
+    clearTasks();
+    filteredTaskNames.forEach(function(task) {
+        addTodo(task);
+    });
+});
+
+function searchTasksByName(searchString) {
+    // Get all the rows in the table body
+    const rows = tableBody.getElementById("tablebody");
+
+    // Create an empty array to store the task names
+    const taskNames = [];
+
+    // Loop through each row and check if the task name matches the search string
+    for (let i = 0; i < rows.length; i++) {
+        const taskName = rows[i].querySelector("textarea").value.toLowerCase();
+        if (taskName.includes(searchString.toLowerCase())) {
+            taskNames.push(taskName);
+        }
+    }
+
+    return taskNames;
+}
+
+function clearTasks() {
+    // Get all the rows in the table body
+    const rows = tableBody.getElementById("tablebody");
+
+    // Iterate over each row and remove it
+    while (rows.length > 0) {
+        // Remove the first row in the tableBody
+        tableBody.removeChild(rows[0]);
+    }
 }

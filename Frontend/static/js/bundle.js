@@ -15853,48 +15853,50 @@ function pauseTask(todoId){
     });
 }
 
-
-searchBar.addEventListener('keyup', function(e) {
-    var searchString = e.target.value.toLowerCase();
-
-    // Call the searchTasksByName function to filter tasks based on the search string
-    var filteredTaskNames = searchTasksByName(searchString);
-
-    /*
-    * Clear all the current tasks from the UI 
-    * and add only the filtered tasks
-    */
-    clearTasks();
-    filteredTaskNames.forEach(function(task) {
-        addTodo(task);
+function getAllUserTodos() {
+    return $.ajax({
+        url: '/todos',
+        method: 'GET',
+        dataType: 'json'
     });
+}
+
+function filterUserTodos(userTodos, searchString) {
+    return userTodos.filter(function(todo) {
+        return todo.task.toLowerCase().includes(searchString.toLowerCase());
+    });
+}
+
+// Event listener for the search bar
+searchBar.addEventListener('keyup', function() {
+    // Get the search query entered by the user
+    var searchString = searchBar.value.trim().toLowerCase();
+
+    var filteredTodos;
+
+    getAllUserTodos()
+        .done(function(response) {
+            // Filter user todos based on the search query
+            filteredTodos = filterUserTodos(response, searchString);
+            clearTasks();
+
+            if (filterUserTodos.length > 0){
+                filteredTodos.forEach(function(task) {
+                    addTodo(task);
+                });
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+        });
+
+    console.log(filteredTodos);
 });
 
-function searchTasksByName(searchString) {
-    // Get all the rows in the table body
-    const rows = tableBody.getElementById("tablebody");
-
-    // Create an empty array to store the task names
-    const taskNames = [];
-
-    // Loop through each row and check if the task name matches the search string
-    for (let i = 0; i < rows.length; i++) {
-        const taskName = rows[i].querySelector("textarea").value.toLowerCase();
-        if (taskName.includes(searchString.toLowerCase())) {
-            taskNames.push(taskName);
-        }
-    }
-
-    return taskNames;
-}
 
 function clearTasks() {
     // Get all the rows in the table body
-    const rows = tableBody.getElementById("tablebody");
+    const rows = $("#tablebody");
 
-    // Iterate over each row and remove it
-    while (rows.length > 0) {
-        // Remove the first row in the tableBody
-        tableBody.removeChild(rows[0]);
-    }
+    rows.empty();
 }

@@ -734,34 +734,32 @@ function filterUserTodos(userTodos, searchString) {
 searchBar.addEventListener('keyup', function() {
     // Get the search query entered by the user
     var searchString = searchBar.value.trim().toLowerCase();
+
+    var filteredTodos;
+
     getAllUserTodos()
         .done(function(response) {
             // Filter user todos based on the search query
-            var filteredTodos = filterUserTodos(response, searchString);
+            filteredTodos = filterUserTodos(response, searchString);
+            clearTasks();
+
+            if (filterUserTodos.length > 0){
+                filteredTodos.forEach(function(task) {
+                    addTodo(task);
+                });
+            }
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.error('Error:', textStatus, errorThrown);
         });
+
+    console.log(filteredTodos);
 });
 
-/**
- * Function to get all todos from the server
- * then add them to the table
- */
-function readdTodos() {
-    $.ajax({
-        type: 'GET', // Use GET method
-        url: '/todos',
-        success: function(response) {
-            // Handle success response
-            console.log('Todos:', response.todos);
-            response.todos.forEach(todo => {
-                addTodo(todo);
-            });
-        },
-        error: function(xhr, status, error) {
-            // Handle error response
-            console.error('Error getting todos:', error);
-        }
-    });
+
+function clearTasks() {
+    // Get all the rows in the table body
+    const rows = $("#tablebody");
+
+    rows.empty();
 }

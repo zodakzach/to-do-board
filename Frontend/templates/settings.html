@@ -1,4 +1,24 @@
 {% extends "base.html" %} {% block content %}
-
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand small-gradient-text fw-bold" href="/todo-list"
+        >To-Do Board</a
+      >
+      <button
+        class="navbar-toggler dropdown"
+        data-bs-toggle="dropdown"
+        role="button"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end me-3">
+        <li><a class="dropdown-item" href="/settings">Settings</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
 
 {% endblock %}

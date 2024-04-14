@@ -35,8 +35,17 @@
           id="search"
         />
         <button class="btn btn-outline-secondary" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-search"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+            />
           </svg>
         </button>
       </div>
@@ -83,15 +92,17 @@
               </div>
 
               <div class="mb-3">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value=""
-                  id="taskCompCheck"
-                />
-                <label class="form-check-label" for="taskCompCheck"
-                  >Completed</label
+                <label for="taskStatusSel" class="form-label">Status</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  id="taskStatusSel"
                 >
+                  <option value="Not Started" selected>Not Started</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Completed">Completed</option>
+                </select>
               </div>
 
               <div class="mb-3">
@@ -206,11 +217,11 @@
   <table class="table table-striped table-hover table-bordered mt-3">
     <thead class="text-center">
       <tr>
-        <th class="task-fixed-width">Task</th>
-        <th>Priority</th>
+        <th>Task</th>
+        <th class="priority-fixed-width">Priority</th>
         <th class="date-fixed-width">Due Date</th>
-        <th>Completed</th>
-        <th>Actions</th>
+        <th class="date-fixed-width">Status</th>
+        <th class="actions-fixed-width">Actions</th>
       </tr>
     </thead>
     <tbody class="text-center table-group-divider" id="tablebody">
@@ -222,7 +233,7 @@
             id="taskTextArea{{todo.id}}"
             rows="2"
             maxlength="255"
-            disabled
+            readonly
           >
 {{todo.task}}</textarea
           >
@@ -235,17 +246,41 @@
           {{ todo.priority }}
         </td>
         {% if todo.due_date %}
-          <td>
-            {{ todo.due_date.strftime('%B %d, %Y') }}<br>
-            {{ todo.due_date.strftime('%I:%M:%S %p') }}
-          </td>     
+        <td>
+          {{ todo.due_date.strftime('%B %d, %Y') }}<br />
+          {{ todo.due_date.strftime('%I:%M:%S %p') }}
+        </td>
         {% else %}
-          <td>None</td>
+        <td>None</td>
         {% endif %}
-        <td>{{ "Yes" if todo.completed else "No" }}</td>
+        <td>
+          {% if todo.status == "Not Started" %}
+          <span
+            id="statusBadge{{todo.id}}"
+            class="badge rounded-pill bg-secondary"
+            >{{ todo.status }}</span
+          >
+          {% elif todo.status == "In Progress" %}
+          <span
+            id="statusBadge{{todo.id}}"
+            class="badge rounded-pill bg-primary"
+            >{{ todo.status }}</span
+          >
+          {% elif todo.status == "Completed" %}
+          <span
+            id="statusBadge{{todo.id}}"
+            class="badge rounded-pill bg-success"
+            >{{ todo.status }}</span
+          >
+          {% elif todo.status == "Paused" %}
+          <span id="statusBadge{{todo.id}}" class="badge rounded-pill bg-danger"
+            >{{ todo.status }}</span
+          >
+          {% endif %}
+        </td>
         <td>
           <!-- Add action buttons here -->
-          {% if not todo.completed %}
+          {% if todo.status != "Completed" %}
           <button
             class="btn btn-success btn-sm"
             data-todo-id="{{ todo.id }}"
@@ -264,6 +299,51 @@
               />
             </svg>
           </button>
+          {% if todo.status != "Paused" and todo.status != 'Not Started' %}
+          <button
+            class="btn btn-secondary btn-sm"
+            data-todo-id="{{ todo.id }}"
+            id="pauseTask{{todo.id}}"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pause-btn"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5"
+              />
+              <path
+                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"
+              />
+            </svg>
+          </button>
+          {% elif todo.status == 'Paused' or todo.status == 'Not Started' %}
+          <button
+            class="btn btn-secondary btn-sm"
+            data-todo-id="{{ todo.id }}"
+            id="startTask{{todo.id}}"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-play-btn"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"
+              />
+              <path
+                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"
+              />
+            </svg>
+          </button>
+          {% endif %} {% endif %}
           <button
             class="btn btn-primary btn-sm"
             data-todo-id="{{ todo.id }}"
@@ -282,7 +362,6 @@
               />
             </svg>
           </button>
-          {% endif %}
           <button
             class="btn btn-danger btn-sm"
             data-todo-id="{{ todo.id }}"

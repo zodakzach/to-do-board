@@ -54,7 +54,11 @@ class Todo(db.Model):
         Enum("low", "medium", "high", name="priority_enum"), nullable=False
     )
     due_date = Column(DateTime(timezone=True))  # Optional due_date
-    completed = Column(Boolean, nullable=False, default=False)
+    status = Column(
+        Enum("Not Started", "In Progress", "Paused", "Completed", name="status_enum"),
+        nullable=False,
+        default="Not Started",
+    )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -80,7 +84,7 @@ class Todo(db.Model):
             "task": self.task,
             "priority": self.priority,
             "due_date": serialized_due_date,
-            "completed": self.completed,
+            "status": self.status,
             "created_at": self.created_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "updated_at": serialized_updated_at,
         }

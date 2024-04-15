@@ -69,7 +69,7 @@ def index():
 @login_required
 def settings():
     # Render the index.html template
-    return render_template("settings.html")
+    return render_template("settings.html", user=current_user)
 
 
 @app.route("/todo-list")

@@ -1,24 +1,85 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <nav class="navbar bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand small-gradient-text fw-bold" href="/todo-list"
-        >To-Do Board</a
-      >
-      <button
-        class="navbar-toggler dropdown"
-        data-bs-toggle="dropdown"
-        role="button"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end me-3">
-        <li><a class="dropdown-item" href="/settings">Settings</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-      </ul>
+  <div class="container-fluid">
+    <a class="navbar-brand small-gradient-text fw-bold" href="/todo-list">To-Do Board</a>
+    <button
+      class="navbar-toggler dropdown"
+      data-bs-toggle="dropdown"
+      role="button"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end me-3">
+      <li><a class="dropdown-item" href="/settings">Settings</a></li>
+      <li><hr class="dropdown-divider" /></li>
+      <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 mt-3">
+      <div class="centered-box">
+        <h1 class="text-center fw-bold mt-3">Account Settings</h1>
+        <p class="text-center fw-lighter">Update your account information</p>
+        <div class="mb-5 mt-5 px-4 overflow-hidden">
+          <label for="username" class="form-label">Username</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Username"
+            id="username"
+            value="{{ user.username }}"
+          />
+          <p class="invalid-feedback mb-0" id="username-error"></p>
+          <label for="email" class="form-label mt-3">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="name@example.com"
+            value="{{ user.email }}"
+          />
+          <p class="invalid-feedback mb-0" id="email-error"></p>
+          <label for="password" class="form-label mt-3">New Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            aria-describedby="passwordHelpBlock"
+            placeholder="New Password"
+          />
+          <p class="invalid-feedback mb-0" id="password-error"></p>
+          <label for="repassword" class="form-label mt-3">Confirm New Password</label>
+          <input
+            type="password"
+            id="repassword"
+            class="form-control"
+            aria-describedby="passwordHelpBlock"
+            placeholder="Confirm New Password"
+          />
+          <p class="invalid-feedback mb-0" id="repassword-error"></p>
+        </div>
+        <div class="text-center">
+          <button
+            type="button"
+            id="update-btn"
+            class="btn btn-lg btn-outline-light mt-3 mb-5 fw-semibold px-5"
+          >
+            UPDATE
+          </button>
+        </div>
+        <div class="text-center mt-5">
+          <span>Want to go back?</span>
+          <a href="/todo-list" class="fw-lighter">Back to Dashboard</a>
+        </div>
+      </div>
     </div>
-  </nav>
+  </div>
+</div>
 
 {% endblock %}

@@ -15729,21 +15729,6 @@ function updateActionButtons(todoId, data, row){
             if (pauseBtnExists) {
                 $(pauseBtnId).hide();
             }
-            if (compBtnExists) {
-                $(compBtnId).show();
-            } else {
-                // Create the button element
-                var compBtn = $('<button class="btn btn-success btn-sm" data-todo-id="' + todoId + '" id="completeTask' + todoId + '">\
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">\
-                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>\
-                                </svg>\
-                                </button>');
-
-                // Append the button to the target td element
-                targetTd.prepend(compBtn);
-                buttonCreated = true;
-                $(compBtnId).show();
-            }
             if (startBtnExists) {
                 $(startBtnId).show();
             } else {
@@ -15761,10 +15746,6 @@ function updateActionButtons(todoId, data, row){
                 buttonCreated = true;
                 $(startBtnId).show();
             }
-        } else {
-            if (startBtnExists) {
-                $(startBtnId).hide();
-            }
             if (compBtnExists) {
                 $(compBtnId).show();
             } else {
@@ -15780,7 +15761,10 @@ function updateActionButtons(todoId, data, row){
                 buttonCreated = true;
                 $(compBtnId).show();
             }
-
+        } else {
+            if (startBtnExists) {
+                $(startBtnId).hide();
+            }
             if (pauseBtnExists) {
                 $(pauseBtnId).show();
             } else {
@@ -15796,6 +15780,21 @@ function updateActionButtons(todoId, data, row){
                 pauseBtn.insertBefore(secondChild);
                 buttonCreated = true;
                 $(pauseBtnId).show();
+            }
+            if (compBtnExists) {
+                $(compBtnId).show();
+            } else {
+                // Create the button element
+                var compBtn = $('<button class="btn btn-success btn-sm" data-todo-id="' + todoId + '" id="completeTask' + todoId + '">\
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">\
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>\
+                                </svg>\
+                                </button>');
+
+                // Append the button to the target td element
+                targetTd.prepend(compBtn);
+                buttonCreated = true;
+                $(compBtnId).show();
             }
         }
         if (buttonCreated){

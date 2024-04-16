@@ -1,8 +1,9 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand small-gradient-text fw-bold" href="/todo-list">To-Do Board</a>
+    <a class="navbar-brand small-gradient-text fw-bold" href="/todo-list"
+      >To-Do Board</a
+    >
     <button
       class="navbar-toggler dropdown"
       data-bs-toggle="dropdown"
@@ -54,7 +55,9 @@
             placeholder="New Password"
           />
           <p class="invalid-feedback mb-0" id="password-error"></p>
-          <label for="repassword" class="form-label mt-3">Confirm New Password</label>
+          <label for="repassword" class="form-label mt-3"
+            >Confirm New Password</label
+          >
           <input
             type="password"
             id="repassword"

@@ -23,6 +23,11 @@
         - [Authetication Routes](#authetication-routes)
         - [Todo CRUD Routes](#todo-crud-routes)
 
+## Team Members
+Zachary Cervenka - {cervenkaz19@students.ecu.edu}
+Michael Carrol - {carrollmi19@students.ecu.edu}
+Xavier Floyd - {floydx19@students.ecu.edu}
+
 ## Getting Started
 
 Follow these instructions to set up and run the project locally.
@@ -64,9 +69,9 @@ cd ../frontend
 npm install
 ```
 
-7. Start the dev server:
+7. Start the server:
 ```bash
-npm run dev
+npm start
 ```
 
 ## Frontend
@@ -124,6 +129,7 @@ To utilize these scripts, follow these steps:
 
 Here's a breakdown of the available scripts
 
+- **start**: Starts production server
 - **dev**: Runs development environment tasks concurrently. It watches for changes in files and starts the backend server.
 - **build**: Builds the project by compiling JavaScript using Rollup and compiling SCSS to CSS.
 - **start-backend**: Starts the backend server by navigating to the backend directory and executing the Python script.
@@ -147,6 +153,9 @@ These scripts streamline various development tasks such as compiling code, watch
 #### Todo-list
 - todo-list.html: HTML file for the todo list page. This page displays the list of todos for the logged-in user and provides options to add, edit, and delete todos.
 - todo-list.js: JavaScript file for the todo list page. It contains scripts to interact with the backend API to fetch and update todos, as well as handle user interactions like marking todos as completed or editing todo details.
+#### Settings
+- settings.js: JavaScript file for the settings page
+- settings.html: HTML file for the settings page
 
 ### Styling
 We are utilizing Bootstrap, a popular CSS framework, to ensure consistency and responsiveness in our application's design. Additionally, we are writing our custom styles in SCSS (Sass) for enhanced maintainability and readability. These SCSS files are then compiled into CSS using the Sass compiler. Moreover, we employ PostCSS, a tool for transforming CSS with JavaScript plugins, to enhance our CSS files further.
@@ -160,7 +169,6 @@ We are leveraging jQuery, a fast, small, and feature-rich JavaScript library, to
 - **todo_board.db** *(This file is a SQLite database file used for dev by the application to store data related to todos, users, or other entities.)*
 - **requirements.txt** *(This file contains a list of Python packages required for your project.)*
 - **.env** *(This file is used to store environment variables for your Flask application. It may contain sensitive information like database URLs, API keys, or other configuration settings.)*
-- **instance** *(This directory is created by sqlite for the database instance it is just a empty directory. if deleted it will just be created again when program is started.)*
 - **src**
   - **auth.py** *(This file contains routes and logic related to user authentication, such as login, logout, and registration.)*
   - **models.py** *(This file defines the database models for the application.)*
@@ -175,7 +183,7 @@ We are leveraging jQuery, a fast, small, and feature-rich JavaScript library, to
 - flask
 - Flask-SQLAlchemy
 - jinja2
-- psycopg
+- psycopg2
 - flask-login
 - python-dotenv
 - flask-bcrypt
@@ -201,7 +209,7 @@ Todo
 - task: Description of the todo task.
 - priority: Priority level of the todo task (low, medium, high).
 - due_date: Optional due date for the todo task.
-- completed: Boolean indicating whether the todo task is completed or not.
+- status: Status (completed, in progress, paused, or not started)
 - created_at: Timestamp indicating when the todo was created.
 - updated_at: Timestamp indicating the last update to the todo.
 
@@ -214,7 +222,8 @@ By using SQLAlchemy, we can seamlessly switch between different database engines
 #### Page URLS
 - Index Page: http://127.0.0.1:5000/
 - Register Page: http://127.0.0.1:5000/auth/register
-- Todo-List Page (Requires authentication): http://127.0.0.1:5000/todo-list
+- Todo-List Page: (Requires authentication): http://127.0.0.1:5000/todo-list
+- Settings Page: (Requires authentication): http://127.0.0.1:5000/settings
 
 #### Authetication Routes
 - POST /auth/register: Register a new user.

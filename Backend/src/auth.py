@@ -67,10 +67,18 @@ def update_user():
     data = request.json
     try:
         # Check if the updated email already exists
-        if 'email' in data:
-            existing_user = User.query.filter_by(email=data['email']).first()
+        if "email" in data:
+            existing_user = User.query.filter_by(email=data["email"]).first()
             if existing_user and existing_user.id != current_user.id:
-                return jsonify({"error": "Email address already exists. Please choose a different one.", "field": "email"}), 400
+                return (
+                    jsonify(
+                        {
+                            "error": "Email address already exists. Please choose a different one.",
+                            "field": "email",
+                        }
+                    ),
+                    400,
+                )
         current_user.update_user(data)
         db.session.commit()
         return jsonify({"message": "User updated successfully"}), 200

@@ -1,7 +1,7 @@
 flask
 Flask-SQLAlchemy
 jinja2
-psycopg
+psycopg2
 flask-login
 python-dotenv
 flask-bcrypt

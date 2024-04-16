@@ -21,10 +21,17 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 # Database Connection (sqlite for dev)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../todo_board.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../todo_board.db"
+
+DB = os.getenv("DATABASE")
+DB_SERVER = os.getenv("DATABASE_SERVER")
+DB_USER = os.getenv("DATABASE_USERNAME")
+DB_PASS = os.getenv("DATABASE_PASSWORD")
 
 # Database Connection (postgresql for production)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@hostname/database_name'
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = f"postgresql://{DB_USER}:{DB_PASS}@{DB_SERVER}/{DB}"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -97,4 +104,4 @@ if __name__ == "__main__":
     ip = "127.0.0.1"
     port = 5000
 
-    app.run(host=ip, port=port, debug=True)
+    app.run(host=ip, port=port)

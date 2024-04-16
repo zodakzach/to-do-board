@@ -13,14 +13,18 @@
       src="{{ url_for('static', filename='js/bundle.js') }}"
     ></script>
   </head>
-  <body>
-    <main>
+  <body class="d-flex flex-column min-vh-100">
+    <main class="wrapper flex-grow-1">
       <!-- Content block that child templates will override -->
       {% block content %} {% endblock %}
     </main>
 
-    <footer>
-      <!-- Footer content goes here -->
+    <footer class="footer bg-dark text-white p-4 fixed-bottom">
+      <div class="container text-center">
+        <span class="text-muted"
+          >© 2024 East Carolina University - To-Do Board</span
+        >
+      </div>
     </footer>
   </body>
 </html>

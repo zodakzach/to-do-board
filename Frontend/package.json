@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Frontend for To-Do Board website.",
   "scripts": {
+    "start": "npm run build && npm run start-backend",
     "dev": "npm-run-all --parallel watch start-backend",
     "build": "rollup --config && npm run css",
     "start-backend": "cd ../Backend && python src/main.py",

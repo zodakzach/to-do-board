@@ -25,7 +25,9 @@
 
 ## Team Members
 Zachary Cervenka - {cervenkaz19@students.ecu.edu}
+
 Michael Carrol - {carrollmi19@students.ecu.edu}
+
 Xavier Floyd - {floydx19@students.ecu.edu}
 
 ## Getting Started
